@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodRecipeSharingPlatform.Migrations
+namespace FoodRecipeSharingPlatform.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -35,7 +35,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -64,7 +64,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -120,7 +120,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -235,7 +235,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     IngredientId = table.Column<Guid>(type: "uuid", nullable: false),
                     Quantity = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -266,7 +266,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     FoodId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -297,7 +297,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     Note = table.Column<string>(type: "text", nullable: true),
                     FoodId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
                     LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
                 },

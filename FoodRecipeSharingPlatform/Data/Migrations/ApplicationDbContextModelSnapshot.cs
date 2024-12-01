@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodRecipeSharingPlatform.Migrations
+namespace FoodRecipeSharingPlatform.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -31,7 +31,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -70,7 +70,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -110,7 +110,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     b.Property<Guid>("IngredientId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -141,7 +141,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -174,7 +174,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     b.Property<Guid>("FoodId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -248,7 +248,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTimeOffset>("LastModified")
+                    b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("LastModifiedBy")
@@ -435,7 +435,7 @@ namespace FoodRecipeSharingPlatform.Migrations
                             b1.Property<Guid>("FoodId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<DateTimeOffset>("LastModified")
+                            b1.Property<DateTimeOffset>("LastModifiedAt")
                                 .HasColumnType("timestamp with time zone");
 
                             b1.Property<Guid>("LastModifiedBy")
