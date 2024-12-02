@@ -27,8 +27,11 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken);
 
+    Task<List<TDto>> GetAllAsync(CancellationToken cancellationToken);
+
     Task<List<TDto>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
+
 
     Task<List<TDto>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
