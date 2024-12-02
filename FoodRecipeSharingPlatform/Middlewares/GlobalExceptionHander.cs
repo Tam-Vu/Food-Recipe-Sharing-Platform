@@ -3,6 +3,7 @@ using System.Text.Json;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Update;
 
 namespace FoodRecipeSharingPlatform.Middlewares;
 
@@ -19,8 +20,7 @@ public class GlobalExceptionHander : IExceptionHandler
         _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
         if (exception is BaseException baseException)
         {
-            var Response = new Result<string>();
-            Response.Failure(baseException.StatusCode, baseException.Message);
+            var Response = Result<string>.Failure(baseException.StatusCode, baseException.Message);
             var result = JsonSerializer.Serialize(Response);
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = baseException.StatusCode;
@@ -29,8 +29,7 @@ public class GlobalExceptionHander : IExceptionHandler
         }
         else
         {
-            var Response = new Result<string>();
-            Response.Failure((int)HttpStatusCode.InternalServerError, "Internal Server Error");
+            var Response = Result<string>.Failure((int)HttpStatusCode.InternalServerError, "Internal Server Error");
             var result = JsonSerializer.Serialize(Response);
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

@@ -17,7 +17,7 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
     protected readonly ApplicationDbContext _context;
     protected readonly IMapper _mapper;
     protected readonly DbSet<TEntity> _dbSet;
-    BaseRepository(ApplicationDbContext context, IMapper mapper)
+    public BaseRepository(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -28,7 +28,8 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         var Entity = _mapper.Map<TEntity>(dto);
         var result = (await _dbSet.AddAsync(Entity, cancellationToken)).Entity;
         await _context.SaveChangesAsync(cancellationToken);
-        return _mapper.Map<ResponseCommand>(result);
+        var test = _mapper.Map<ResponseCommand>(result);
+        return test;
     }
 
     public virtual async Task<IEnumerable<ResponseCommand>> AddRangeAsync(IEnumerable<TDto> dtos, CancellationToken cancellationToken)
@@ -219,5 +220,11 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         }
         var result = _mapper.Map<PaginationResponse<TDto>>(response);
         return result;
+    }
+
+    public virtual async Task<List<TDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var entities = await _dbSet.ToListAsync();
+        return _mapper.Map<List<TDto>>(entities);
     }
 }

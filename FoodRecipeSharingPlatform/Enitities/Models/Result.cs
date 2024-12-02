@@ -5,12 +5,23 @@ public class Result<TEntity>
     public string? Message { get; set; }
     public object? Data { get; set; }
 
-    public Result<TEntity> Success(int statusCode, object data, string message)
+    private Result() { }
+    private Result(int statusCode, object data, string message)
+    {
+        this.StatusCode = statusCode;
+        this.Data = data;
+        this.Message = message;
+    }
+    public Result<TEntity> CommonSuccess(int statusCode, object data, string message)
     {
         return new Result<TEntity> { StatusCode = statusCode, Data = data, Message = message };
     }
 
-    public Result<TEntity> Failure(int statusCode, string message)
+    public static Result<TEntity> CreatedSuccess(TEntity data)
+    {
+        return new Result<TEntity>(201, data!, $"Created {typeof(TEntity).Name} successfully");
+    }
+    public static Result<TEntity> Failure(int statusCode, string message)
     {
         return new Result<TEntity> { StatusCode = statusCode, Message = message, Data = null };
     }
