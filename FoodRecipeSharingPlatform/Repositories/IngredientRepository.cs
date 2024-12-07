@@ -1,6 +1,6 @@
 using AutoMapper;
-using FoodRecipeSharingPlatform.Dtos.Gredient.CommandIngredient;
-using FoodRecipeSharingPlatform.Dtos.Gredient.ResposeIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.CommandIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;

@@ -39,7 +39,8 @@ IConfiguration configuration = builder.Configuration;
     builder.Services
         .AddScoped<IRepositoryFactory, RepositoryFactory>()
         .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
-        .AddScoped<IIngredientRepository, IngredientRepository>();
+        .AddScoped<IIngredientRepository, IngredientRepository>()
+        .AddScoped<ICategoryRepository, CategoryRepository>();
 
     builder.Services
         .AddExceptionHandler<GlobalExceptionHander>()

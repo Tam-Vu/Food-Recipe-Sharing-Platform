@@ -1,6 +1,6 @@
 
-using FoodRecipeSharingPlatform.Dtos.Gredient.CommandIngredient;
-using FoodRecipeSharingPlatform.Dtos.Gredient.ResposeIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.CommandIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 using FoodRecipeSharingPlatform.Entities.Models;
 
 namespace FoodRecipeSharingPlatform.Interfaces;

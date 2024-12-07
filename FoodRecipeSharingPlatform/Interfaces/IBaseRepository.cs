@@ -13,6 +13,9 @@ public interface IBaseRepository<TEntity, TKey> where TEntity : class
 
     Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken);
 
+    Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken);
+
     Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
