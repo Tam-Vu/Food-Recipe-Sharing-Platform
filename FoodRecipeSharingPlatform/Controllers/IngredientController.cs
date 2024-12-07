@@ -1,16 +1,15 @@
 
 using AutoMapper;
-using FoodRecipeSharingPlatform.Dtos.Gredient.CommandIngredient;
-using FoodRecipeSharingPlatform.Dtos.Gredient.ResposeIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.CommandIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Entities.Models;
-using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodRecipeSharingPlatform.Controllers;
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class IngredientController : ControllerBase
 {
     private readonly IIngredientRepository _ingredientRepository;
@@ -33,7 +32,7 @@ public class IngredientController : ControllerBase
         return Ok(Result<List<ResposeIngredient>>.CommonSuccess(result));
     }
 
-    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateIngredient(Guid id, [FromBody] CommandIngredient commandIngredient, CancellationToken cancellationToken)
     {
         var result = await _ingredientRepository.UpdateIngredient(id, commandIngredient, cancellationToken);

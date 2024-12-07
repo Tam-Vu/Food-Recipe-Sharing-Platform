@@ -1,7 +1,7 @@
 using AutoMapper;
 using FoodRecipeSharingPlatform.Enitities;
 
-namespace FoodRecipeSharingPlatform.Dtos.Gredient.ResposeIngredient;
+namespace FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 
 public class ResponseGredientMapping : Profile
 {

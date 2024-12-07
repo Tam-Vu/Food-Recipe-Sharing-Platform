@@ -222,4 +222,11 @@ public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
         var entities = await _dbSet.ToListAsync();
         return entities;
     }
+
+    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    {
+        var query = _dbSet.Where(predicate);
+        var entity = await query.FirstOrDefaultAsync(cancellationToken);
+        return entity;
+    }
 }

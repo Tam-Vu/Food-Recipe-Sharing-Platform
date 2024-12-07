@@ -2,7 +2,7 @@ using AutoMapper;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Entities.Models;
 
-namespace FoodRecipeSharingPlatform.Dtos.Gredient.CommandIngredient;
+namespace FoodRecipeSharingPlatform.Dtos.IngredientDto.CommandIngredient;
 
 public class CommandGredientMapping : Profile
 {
