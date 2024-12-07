@@ -1,10 +1,7 @@
 namespace FoodRecipeSharingPlatform.Data.Common;
-
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
-using FoodRecipeSharingPlatform.Configurations.Binding;
 using FoodRecipeSharingPlatform.Enitities;
+using FoodRecipeSharingPlatform.Enitities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

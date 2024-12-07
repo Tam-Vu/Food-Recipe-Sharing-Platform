@@ -1,3 +1,5 @@
+using FoodRecipeSharingPlatform.Enitities.Identity;
+
 namespace FoodRecipeSharingPlatform.Enitities;
 
 public class Food : BaseEntity

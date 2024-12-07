@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace FoodRecipeSharingPlatform.Enitities;
+namespace FoodRecipeSharingPlatform.Enitities.Identity;
 
 public class User : IdentityUser<Guid>
 {

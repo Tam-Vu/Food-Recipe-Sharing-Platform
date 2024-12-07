@@ -7,47 +7,47 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace FoodRecipeSharingPlatform.Interfaces;
 
 
-public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class where TDto : class
+public interface IBaseRepository<TEntity, TKey> where TEntity : class
 {
     IQueryable<TEntity> All();
 
-    Task<TDto> GetByIdAsync(TKey id, CancellationToken cancellationToken);
+    Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken);
 
-    Task<TDto> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
-    Task<TDto> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken);
 
-    Task<TDto> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
-    Task<TDto> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken);
 
-    Task<List<TDto>> GetAllAsync(CancellationToken cancellationToken);
+    Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<List<TDto>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
 
-    Task<List<TDto>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken);
 
-    Task<List<TDto>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> sort,
         CancellationToken cancellationToken);
 
-    Task<PaginationResponse<TDto>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
+    Task<PaginationResponse<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> sort,
         int pageIndex,
         int pageSize,
         CancellationToken cancellationToken);
 
-    Task<PaginationResponse<TDto>> GetAllAsync(
+    Task<PaginationResponse<TEntity>> GetAllAsync(
        Expression<Func<TEntity, bool>> predicate,
        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> sort,
        int pageIndex,
@@ -55,21 +55,21 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
        CancellationToken cancellationToken);
 
-    Task<ResponseCommand> AddAsync(TDto dto, CancellationToken cancellationToken);
+    Task<ResponseCommand> AddAsync(TEntity entity, CancellationToken cancellationToken);
 
-    Task<IEnumerable<ResponseCommand>> AddRangeAsync(IEnumerable<TDto> dtos, CancellationToken cancellationToken);
+    Task<IEnumerable<ResponseCommand>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
 
-    Task<ResponseCommand> UpdateAsync(TDto dto, CancellationToken cancellationToken);
+    Task<ResponseCommand> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
 
-    Task<List<ResponseCommand>> UpdateRangeAsync(List<TDto> dtos, CancellationToken cancellationToken);
+    Task<List<ResponseCommand>> UpdateRangeAsync(List<TEntity> entities, CancellationToken cancellationToken);
 
     Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
 
-    Task DeleteAsync(TDto dto, CancellationToken cancellationToken);
+    Task<ResponseCommand> DeleteAsync(TEntity entity, CancellationToken cancellationToken);
 
     Task DeleteByIdAsync(TKey id, CancellationToken cancellationToken);
     Task DeleteMultiByIdAsync(ICollection<TKey> ids, CancellationToken cancellationToken);
     Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
-    Task DeleteByModel(TDto dto, CancellationToken cancellationToken);
-    Task DeleteByMultiModel(List<TDto> dtos, CancellationToken cancellationToken);
+    Task DeleteByModel(TEntity entity, CancellationToken cancellationToken);
+    Task DeleteByMultiModel(List<TEntity> entities, CancellationToken cancellationToken);
 }

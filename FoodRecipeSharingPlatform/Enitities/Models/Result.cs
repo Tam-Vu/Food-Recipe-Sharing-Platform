@@ -12,14 +12,14 @@ public class Result<TEntity>
         this.Data = data;
         this.Message = message;
     }
-    public Result<TEntity> CommonSuccess(int statusCode, object data, string message)
+    public static Result<TEntity> CommonSuccess(object data)
     {
-        return new Result<TEntity> { StatusCode = statusCode, Data = data, Message = message };
+        return new Result<TEntity> { StatusCode = 200, Data = data, Message = "Command execute successfully" };
     }
 
     public static Result<TEntity> CreatedSuccess(TEntity data)
     {
-        return new Result<TEntity>(201, data!, $"Created {typeof(TEntity).Name} successfully");
+        return new Result<TEntity>(201, data!, "Command executed successfully");
     }
     public static Result<TEntity> Failure(int statusCode, string message)
     {

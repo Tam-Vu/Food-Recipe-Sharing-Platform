@@ -1,8 +1,8 @@
 using FluentValidation;
 
-namespace FoodRecipeSharingPlatform.Dtos.Gredient.CommandGredient;
+namespace FoodRecipeSharingPlatform.Dtos.Gredient.CommandIngredient;
 
-public class CommandGredientValidator : AbstractValidator<CommandGredient>
+public class CommandGredientValidator : AbstractValidator<CommandIngredient>
 {
     public CommandGredientValidator()
     {
