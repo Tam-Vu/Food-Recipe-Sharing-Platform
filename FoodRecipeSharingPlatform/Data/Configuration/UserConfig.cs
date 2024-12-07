@@ -1,4 +1,4 @@
-using FoodRecipeSharingPlatform.Enitities;
+using FoodRecipeSharingPlatform.Enitities.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

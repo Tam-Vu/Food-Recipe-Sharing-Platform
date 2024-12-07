@@ -3,7 +3,6 @@ using System.Text.Json;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Update;
 
 namespace FoodRecipeSharingPlatform.Middlewares;
 
