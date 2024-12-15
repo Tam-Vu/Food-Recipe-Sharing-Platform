@@ -45,4 +45,12 @@ public class IngredientController : ControllerBase
         var ingredient = await _ingredientRepository.DeleteIngredient(id, cancellationToken);
         return Ok(Result<ResponseCommand>.CreatedSuccess(ingredient));
     }
+
+    [HttpGet("{name}")]
+    public async Task<IActionResult> FindIngredientsByName(string name, CancellationToken cancellationToken)
+    {
+        var ingredients = await _ingredientRepository.GetAllIngredientsByName(name, cancellationToken);
+        return Ok(Result<List<ResposeIngredient>>.CommonSuccess(ingredients));
+    }
+
 }

@@ -60,6 +60,20 @@ public class IngredientRepository : IIngredientRepository
         }
     }
 
+    public async Task<List<ResposeIngredient>> GetAllIngredientsByName(string name, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var ingredients = await _ingredientRepository.GetAllAsync(x => x.Name.Contains(name), cancellationToken);
+            var result = _mapper.Map<List<ResposeIngredient>>(ingredients);
+            return result;
+        }
+        catch (Exception e)
+        {
+            throw new BadRequestException(e.Message);
+        }
+    }
+
     public async Task<ResponseCommand> UpdateIngredient(Guid id, CommandIngredient commandIngredient, CancellationToken cancellationToken)
     {
         try
