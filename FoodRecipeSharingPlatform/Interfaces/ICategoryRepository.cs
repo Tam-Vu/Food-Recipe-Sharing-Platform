@@ -10,5 +10,6 @@ public interface ICategoryRepository
     Task<ResponseCommand> UpdateCategory(Guid id, CommandCategory commandCategory, CancellationToken cancellationToken);
     Task<ResponseCommand> DeleteCategory(Guid id, CancellationToken cancellationToken);
     Task<List<ResponseCategory>> GetAllCategories(CancellationToken cancellationToken);
+    // Task<List<ResponseCategory>> GetAllCategoriesByName(string name, CancellationToken cancellationToken);
 
 }

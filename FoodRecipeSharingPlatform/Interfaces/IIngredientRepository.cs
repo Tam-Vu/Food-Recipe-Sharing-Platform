@@ -10,4 +10,6 @@ public interface IIngredientRepository
     Task<ResponseCommand> AddIngredient(CommandIngredient commandIngredient, CancellationToken cancellationToken);
     Task<ResponseCommand> UpdateIngredient(Guid id, CommandIngredient commandIngredient, CancellationToken cancellationToken);
     Task<ResponseCommand> DeleteIngredient(Guid id, CancellationToken cancellationToken);
+    Task<List<ResposeIngredient>> GetAllIngredientsByName(string name, CancellationToken cancellationToken);
+
 }
