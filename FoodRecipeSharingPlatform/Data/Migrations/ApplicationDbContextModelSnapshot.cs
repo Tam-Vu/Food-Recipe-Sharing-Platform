@@ -31,18 +31,18 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -64,6 +64,9 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -73,15 +76,12 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -104,6 +104,9 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
                     b.Property<Guid>("FoodId")
                         .HasColumnType("uuid");
 
@@ -113,15 +116,12 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uuid");
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
 
                     b.Property<string>("Quantity")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -132,73 +132,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.ToTable("FoodIngredient");
                 });
 
-            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Ingredient", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("LastModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ingredient");
-                });
-
-            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Rating", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("FoodId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("LastModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Star")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FoodId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Rating");
-                });
-
-            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Role", b =>
+            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Identity.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,7 +159,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.ToTable("Role", (string)null);
                 });
 
-            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.User", b =>
+            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Identity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,9 +184,6 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
 
                     b.Property<DateTimeOffset>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("LastModifiedBy")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
@@ -283,9 +214,6 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("UpdateBy")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -300,6 +228,72 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Ingredient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ingredient");
+                });
+
+            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Rating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("FoodId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Star")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FoodId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Rating");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -413,7 +407,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.User", "User")
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.User", "User")
                         .WithMany("Foods")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -428,6 +422,9 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                             b1.Property<DateTimeOffset>("CreatedAt")
                                 .HasColumnType("timestamp with time zone");
 
+                            b1.Property<string>("CreatedBy")
+                                .HasColumnType("text");
+
                             b1.Property<string>("Description")
                                 .IsRequired()
                                 .HasColumnType("text");
@@ -438,17 +435,14 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                             b1.Property<DateTimeOffset>("LastModifiedAt")
                                 .HasColumnType("timestamp with time zone");
 
-                            b1.Property<Guid>("LastModifiedBy")
-                                .HasColumnType("uuid");
+                            b1.Property<string>("LastModifiedBy")
+                                .HasColumnType("text");
 
                             b1.Property<string>("Note")
                                 .HasColumnType("text");
 
                             b1.Property<int>("Order")
                                 .HasColumnType("integer");
-
-                            b1.Property<Guid>("UpdateBy")
-                                .HasColumnType("uuid");
 
                             b1.HasKey("Id");
 
@@ -494,7 +488,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.User", "User")
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.User", "User")
                         .WithMany("Ratings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -507,7 +501,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Role", null)
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -516,7 +510,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.User", null)
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -525,7 +519,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.User", null)
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -534,13 +528,13 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Role", null)
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.User", null)
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -549,7 +543,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("FoodRecipeSharingPlatform.Enitities.User", null)
+                    b.HasOne("FoodRecipeSharingPlatform.Enitities.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -568,16 +562,16 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     b.Navigation("Ratings");
                 });
 
-            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Ingredient", b =>
-                {
-                    b.Navigation("FoodIngredients");
-                });
-
-            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.User", b =>
+            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Identity.User", b =>
                 {
                     b.Navigation("Foods");
 
                     b.Navigation("Ratings");
+                });
+
+            modelBuilder.Entity("FoodRecipeSharingPlatform.Enitities.Ingredient", b =>
+                {
+                    b.Navigation("FoodIngredients");
                 });
 #pragma warning restore 612, 618
         }

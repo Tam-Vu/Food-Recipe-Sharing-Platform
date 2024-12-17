@@ -3,7 +3,7 @@ namespace FoodRecipeSharingPlatform.Enitities.Identity;
 
 public class Role : IdentityRole<Guid>
 {
-    public Role() : base()
+    public Role()
     {
     }
 
