@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodRecipeSharingPlatform.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class Base : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,8 +20,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -36,8 +36,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,8 +65,6 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -121,8 +119,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -236,8 +234,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     Quantity = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -267,8 +265,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     FoodId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -298,8 +296,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     FoodId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModifiedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    UpdateBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    LastModifiedBy = table.Column<Guid>(type: "uuid", nullable: false)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

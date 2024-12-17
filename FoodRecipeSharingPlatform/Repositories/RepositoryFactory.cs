@@ -12,7 +12,7 @@ public class RepositoryFactory : IRepositoryFactory
     {
         this._serviceProvider = serviceProvider;
     }
-    public IBaseRepository<TEntity, Guid> GetRepository<TEntity, Guid>() where TEntity : BaseEntity
+    public IBaseRepository<TEntity, Guid> GetRepository<TEntity, Guid>() where TEntity : class
     {
         return this._serviceProvider.GetRequiredService<IBaseRepository<TEntity, Guid>>();
     }

@@ -2,6 +2,7 @@ namespace FoodRecipeSharingPlatform.Data.Common;
 using System.Reflection;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Enitities.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

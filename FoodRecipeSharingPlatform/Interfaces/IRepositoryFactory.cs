@@ -5,5 +5,5 @@ namespace FoodRecipeSharingPlatform.Interfaces;
 
 public interface IRepositoryFactory
 {
-    IBaseRepository<TEntity, Guid> GetRepository<TEntity, Guid>() where TEntity : BaseEntity;
+    IBaseRepository<TEntity, Guid> GetRepository<TEntity, Guid>() where TEntity : class;
 }
