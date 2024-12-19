@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using FoodRecipeSharingPlatform.Configurations.Binding;
 using FoodRecipeSharingPlatform.Configurations.Common;
 using FoodRecipeSharingPlatform.Data.Common;
+using FoodRecipeSharingPlatform.Data.Interceptor;
 using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
@@ -13,6 +14,7 @@ using FoodRecipeSharingPlatform.Repositories;
 using FoodRecipeSharingPlatform.Services.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -23,9 +25,12 @@ var databaseConfig = new DatabaseConfiguration();
 configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
 
 {
+    builder.Services.AddScoped<AuditableEntityInterceptor>();
+
     builder.Services
-        .AddDbContext<ApplicationDbContext>(option =>
+        .AddDbContext<ApplicationDbContext>((provider, option) =>
         {
+            option.AddInterceptors(provider.GetRequiredService<AuditableEntityInterceptor>());
             option.UseNpgsql(databaseConfig.ConnectionString, options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
@@ -40,7 +45,7 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
         });
 
     builder.Services
-        .AddIdentity<User, Role>(options =>
+        .AddIdentity<User, FoodRecipeSharingPlatform.Enitities.Identity.Role>(options =>
         {
             options.User.RequireUniqueEmail = true;
             options.SignIn.RequireConfirmedEmail = true;
@@ -78,6 +83,7 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
     builder.Services
         .AddScoped<IRepositoryFactory, RepositoryFactory>()
         .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
+        .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
         .AddSingleton(TimeProvider.System)
         .AddScoped<IIngredientRepository, IngredientRepository>()
         .AddScoped<ICategoryRepository, CategoryRepository>()

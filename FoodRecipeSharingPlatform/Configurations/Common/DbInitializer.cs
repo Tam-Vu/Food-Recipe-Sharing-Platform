@@ -47,6 +47,7 @@ public class DbInitializer
                 PhoneNumber = "0123456789",
                 SecurityStamp = Guid.NewGuid().ToString("D"),
                 EmailConfirmed = true,
+                FullName = "admin1",
             };
             var createResult = await _userManager.CreateAsync(user, "Admin123!");
             if (!createResult.Succeeded)

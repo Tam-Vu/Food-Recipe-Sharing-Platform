@@ -9,6 +9,7 @@ using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
 using Microsoft.AspNetCore.Identity;
+using StackExchange.Redis;
 
 namespace FoodRecipeSharingPlatform.Services.Security;
 
@@ -20,8 +21,11 @@ public class AuthService : IAuthService
     private readonly SignInManager<User> _signInManager;
     private readonly IUserTokenRepository _userTokenRepository;
     private readonly IEmailSenderRepository _emailSenderRepository;
-
-    public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtSerivce, IMapper mapper, IUserTokenRepository userTokenRepository, IEmailSenderRepository emailSenderRepository)
+    private readonly ConnectionMultiplexer _redis;
+    private readonly IIdentityService _identityService;
+    public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtSerivce,
+        IMapper mapper, IUserTokenRepository userTokenRepository, IEmailSenderRepository emailSenderRepository,
+        ConnectionMultiplexer redis, IIdentityService identityService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -29,6 +33,8 @@ public class AuthService : IAuthService
         _mapper = mapper;
         _userTokenRepository = userTokenRepository;
         _emailSenderRepository = emailSenderRepository;
+        _redis = redis;
+        _identityService = identityService;
     }
 
     public Task<ResponseCommand> ChangePasswordAsync(ChangePasswordDto changePasswordDto, string password)
@@ -46,14 +52,52 @@ public class AuthService : IAuthService
         throw new NotImplementedException();
     }
 
-    public Task<LoginResponse> LoginAsync(LoginDto loginDto)
+    public async Task<LoginResponse> LoginAsync(LoginDto loginDto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(loginDto.UserNameOrEmail);
+            if (user == null)
+            {
+                user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmail);
+                throw new BadRequestException("Username or password is incorrect");
+            }
+            var resultSignIn = await _signInManager.PasswordSignInAsync(user, loginDto.Password, loginDto.RememberMe, true);
+            if (resultSignIn?.Succeeded != true)
+            {
+                throw new BadRequestException("Username or password is incorrect");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = _jwtSerivce.GenerateToken(user.Id, user.Email!, user.FullName, user.UserName!, roles.ToList());
+
+            var redis = _redis.GetDatabase();
+            await redis.StringSetAsync(user.Id.ToString(), token);
+
+            var result = new LoginResponse(token, "");
+            return result;
+        }
+        catch (Exception e)
+        {
+            throw new BadRequestException(e.Message);
+        }
     }
 
-    public Task<string> LogoutAsync()
+    public async Task<string> LogoutAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var token = _jwtSerivce.GetCurrentToken();
+            var userId = _identityService.GetUserId();
+            var redis = _redis.GetDatabase();
+            await redis.KeyDeleteAsync(userId!.ToString());
+            await _signInManager.SignOutAsync();
+            return "logout successfully";
+        }
+        catch (Exception e)
+        {
+            throw new BadRequestException(e.Message);
+        }
     }
 
     public Task<string> RefreshTokenAsync()

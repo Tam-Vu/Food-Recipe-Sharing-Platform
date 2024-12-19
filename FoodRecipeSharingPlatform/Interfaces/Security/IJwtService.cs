@@ -8,7 +8,7 @@ public interface IJwtService
 {
     string? GetCurrentToken();
     TokenValidationParameters GetJwtParams();
-    ClaimsPrincipal ValidateToken(string token);
+    ClaimsPrincipal? ValidateToken(string token);
     Claim? GetClaim(string token, string claimType);
-    string GenerateToken(User user, List<string> roles);
+    string GenerateToken(Guid guid, string Email, string FullName, string UserName, List<string> roles);
 }

@@ -24,14 +24,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.SetTableName(entity.DisplayName());
         }
     }
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     var databaseConfiguration = _configuration.GetSection("DatabaseConfiguration").Get<DatabaseConfiguration>();
-    //     {
-    //         optionsBuilder.UseNpgsql(databaseConfiguration!.ConnectionString, options =>
-    //         {
-    //             options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-    //         });
-    //     };
-    // }
 }

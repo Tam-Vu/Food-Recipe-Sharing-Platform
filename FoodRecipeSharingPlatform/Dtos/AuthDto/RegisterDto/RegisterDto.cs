@@ -5,5 +5,6 @@ public record RegisterDto(
     string Password,
     string RetypePassword,
     string UserName,
-    string PhoneNumber
+    string PhoneNumber,
+    string FullName
 );
