@@ -51,7 +51,7 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
             options.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders();
 
     builder.Services
         .Configure<IdentityOptions>(options =>
