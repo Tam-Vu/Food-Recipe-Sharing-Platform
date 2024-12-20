@@ -3,10 +3,10 @@
 <h1 align="center" style="font-weight: bold;">Food Recipe Sharing Platform</h1>
 
 <p align="center">
-<a href="#architecture">Architecture</a> -
-<a href="#structure">Folder Structure</a> -
-<a href="#libraries">Libraries</a> -
-<a href="#started">Getting Started</a>
+<a href="#architecture">📐 Architecture</a> -
+<a href="#structure">📂 Folder Structure</a> -
+<a href="#libraries">💻 Libraries</a> -
+<a href="#started">🚀 Getting Started</a>
 </p>
 
 
