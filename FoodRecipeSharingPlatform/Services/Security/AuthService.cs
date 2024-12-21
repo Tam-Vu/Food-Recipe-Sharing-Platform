@@ -9,7 +9,7 @@ using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
 using Microsoft.AspNetCore.Identity;
-using StackExchange.Redis;
+// using StackExchange.Redis;
 
 namespace FoodRecipeSharingPlatform.Services.Security;
 
@@ -21,11 +21,12 @@ public class AuthService : IAuthService
     private readonly SignInManager<User> _signInManager;
     private readonly IUserTokenRepository _userTokenRepository;
     private readonly IEmailSenderRepository _emailSenderRepository;
-    private readonly ConnectionMultiplexer _redis;
+    // private readonly ConnectionMultiplexer _redis;
     private readonly IIdentityService _identityService;
     public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtSerivce,
         IMapper mapper, IUserTokenRepository userTokenRepository, IEmailSenderRepository emailSenderRepository,
-        ConnectionMultiplexer redis, IIdentityService identityService)
+        // ConnectionMultiplexer redis, 
+        IIdentityService identityService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -33,7 +34,7 @@ public class AuthService : IAuthService
         _mapper = mapper;
         _userTokenRepository = userTokenRepository;
         _emailSenderRepository = emailSenderRepository;
-        _redis = redis;
+        // _redis = redis;
         _identityService = identityService;
     }
 
@@ -71,8 +72,8 @@ public class AuthService : IAuthService
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtSerivce.GenerateToken(user.Id, user.Email!, user.FullName, user.UserName!, roles.ToList());
 
-            var redis = _redis.GetDatabase();
-            await redis.StringSetAsync(user.Id.ToString(), token);
+            // var redis = _redis.GetDatabase();
+            // await redis.StringSetAsync(user.Id.ToString(), token);
 
             var result = new LoginResponse(token, "");
             return result;
@@ -89,8 +90,8 @@ public class AuthService : IAuthService
         {
             var token = _jwtSerivce.GetCurrentToken();
             var userId = _identityService.GetUserId();
-            var redis = _redis.GetDatabase();
-            await redis.KeyDeleteAsync(userId!.ToString());
+            // var redis = _redis.GetDatabase();
+            // await redis.KeyDeleteAsync(userId!.ToString());
             await _signInManager.SignOutAsync();
             return "logout successfully";
         }

@@ -23,9 +23,26 @@ var emailConfig = new EmailSenderConfiguration();
 configuration.GetSection(EmailSenderConfiguration.EmailSettingConfig).Bind(emailConfig);
 var databaseConfig = new DatabaseConfiguration();
 configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
-
+var jwtConfig = new JwtConfiguration();
+configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
 {
-    builder.Services.AddScoped<AuditableEntityInterceptor>();
+    builder.Services
+        // .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
+        .AddSingleton(jwtConfig)
+        .AddScoped<IRepositoryFactory, RepositoryFactory>()
+        .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
+        .AddScoped<IJwtService, JwtService>()
+        .AddScoped<IAuthService, AuthService>()
+        .AddSingleton(TimeProvider.System)
+        .AddScoped<IIngredientRepository, IngredientRepository>()
+        .AddScoped<ICategoryRepository, CategoryRepository>()
+        .AddScoped<IEmailSenderRepository, EmailSenderRepository>()
+        .AddScoped<IUserTokenRepository, UserTokenRepository>()
+        .AddScoped<IIdentityService, IdentityService>()
+        .AddTransient<DbInitializer>();
+
+    builder.Services
+        .AddScoped<AuditableEntityInterceptor>();
 
     builder.Services
         .AddDbContext<ApplicationDbContext>((provider, option) =>
@@ -35,7 +52,9 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
-        })
+        });
+
+    builder.Services
         .AddFluentEmail(emailConfig.Username)
         .AddSmtpSender(new SmtpClient(emailConfig.Server)
         {
@@ -78,20 +97,6 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
     builder.Services
         .AddEndpointsApiExplorer()
         .AddSwaggerGen();
-
-
-    builder.Services
-        .AddScoped<IRepositoryFactory, RepositoryFactory>()
-        .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
-        .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
-        .AddSingleton(TimeProvider.System)
-        .AddScoped<IIngredientRepository, IngredientRepository>()
-        .AddScoped<ICategoryRepository, CategoryRepository>()
-        .AddScoped<IAuthService, AuthService>()
-        .AddScoped<IEmailSenderRepository, EmailSenderRepository>()
-        .AddScoped<IJwtService, JwtService>()
-        .AddScoped<IUserTokenRepository, UserTokenRepository>()
-        .AddTransient<DbInitializer>();
 
     builder.Services
         .AddExceptionHandler<GlobalExceptionHander>()

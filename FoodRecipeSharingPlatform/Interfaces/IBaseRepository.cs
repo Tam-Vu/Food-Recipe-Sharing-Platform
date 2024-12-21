@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace FoodRecipeSharingPlatform.Interfaces;
 
 
-public interface IBaseRepository<TEntity, TKey> where TEntity : class
+public interface IBaseRepository<TEntity, TKey> where TEntity : BaseEntity
 {
     IQueryable<TEntity> All();
 
