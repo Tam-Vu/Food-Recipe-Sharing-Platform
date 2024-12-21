@@ -8,4 +8,5 @@ public class User : IdentityUser<Guid>
     public DateTimeOffset LastModifiedAt { get; set; }
     public ICollection<Food>? Foods { get; set; }
     public ICollection<Rating>? Ratings { get; set; }
+    public required string FullName { get; set; }
 }

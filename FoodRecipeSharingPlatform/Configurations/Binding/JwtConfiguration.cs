@@ -3,9 +3,9 @@ namespace FoodRecipeSharingPlatform.Configurations.Binding;
 public sealed class JwtConfiguration
 {
     public const string jwtConfig = "JwtSettings";
-    public required string Secret { get; set; }
-    public required string TokenExpirationInMinutes { get; set; }
-    public required string Issuer { get; set; }
-    public required string Audience { get; set; }
-    public required string RefreshTokenExpirationInDays { get; set; }
+    public string Secret { get; set; } = null!;
+    public string TokenExpirationInMinutes { get; set; } = null!;
+    public string Issuer { get; set; } = null!;
+    public string Audience { get; set; } = null!;
+    public string RefreshTokenExpirationInDays { get; set; } = null!;
 }

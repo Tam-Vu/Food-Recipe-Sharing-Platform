@@ -15,8 +15,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
     public AuditableEntityInterceptor(IIdentityService identityService, TimeProvider timeProvider)
     {
-        this._identityService = identityService;
-        this._timeProvider = timeProvider;
+        _identityService = identityService;
+        _timeProvider = timeProvider;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)

@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using EFCore.BulkExtensions;
 using FoodRecipeSharingPlatform.Data.Common;
+using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace FoodRecipeSharingPlatform.Repositories;
 public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
-       where TEntity : class
+       where TEntity : BaseEntity
 {
     protected readonly ApplicationDbContext _context;
     protected readonly IMapper _mapper;

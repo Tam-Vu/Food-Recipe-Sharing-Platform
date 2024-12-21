@@ -2,7 +2,6 @@ namespace FoodRecipeSharingPlatform.Data.Common;
 using System.Reflection;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Enitities.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,14 +23,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.SetTableName(entity.DisplayName());
         }
     }
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     var databaseConfiguration = _configuration.GetSection("DatabaseConfiguration").Get<DatabaseConfiguration>();
-    //     {
-    //         optionsBuilder.UseNpgsql(databaseConfiguration!.ConnectionString, options =>
-    //         {
-    //             options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-    //         });
-    //     };
-    // }
 }

@@ -9,7 +9,7 @@ public class IdentityService : IIdentityService
 
     public IdentityService(IHttpContextAccessor httpContextAccessor)
     {
-        this._httpContextAccessor = httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public string? GetUserId() => this.GetClaim(ClaimTypes.NameIdentifier);

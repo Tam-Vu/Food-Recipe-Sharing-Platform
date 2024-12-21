@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using FoodRecipeSharingPlatform.Configurations.Binding;
 using FoodRecipeSharingPlatform.Configurations.Common;
 using FoodRecipeSharingPlatform.Data.Common;
+using FoodRecipeSharingPlatform.Data.Interceptor;
 using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
@@ -13,6 +14,7 @@ using FoodRecipeSharingPlatform.Repositories;
 using FoodRecipeSharingPlatform.Services.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -21,16 +23,38 @@ var emailConfig = new EmailSenderConfiguration();
 configuration.GetSection(EmailSenderConfiguration.EmailSettingConfig).Bind(emailConfig);
 var databaseConfig = new DatabaseConfiguration();
 configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
-
+var jwtConfig = new JwtConfiguration();
+configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
 {
     builder.Services
-        .AddDbContext<ApplicationDbContext>(option =>
+        // .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
+        .AddSingleton(jwtConfig)
+        .AddScoped<IRepositoryFactory, RepositoryFactory>()
+        .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
+        .AddScoped<IJwtService, JwtService>()
+        .AddScoped<IAuthService, AuthService>()
+        .AddSingleton(TimeProvider.System)
+        .AddScoped<IIngredientRepository, IngredientRepository>()
+        .AddScoped<ICategoryRepository, CategoryRepository>()
+        .AddScoped<IEmailSenderRepository, EmailSenderRepository>()
+        .AddScoped<IUserTokenRepository, UserTokenRepository>()
+        .AddScoped<IIdentityService, IdentityService>()
+        .AddTransient<DbInitializer>();
+
+    builder.Services
+        .AddScoped<AuditableEntityInterceptor>();
+
+    builder.Services
+        .AddDbContext<ApplicationDbContext>((provider, option) =>
         {
+            option.AddInterceptors(provider.GetRequiredService<AuditableEntityInterceptor>());
             option.UseNpgsql(databaseConfig.ConnectionString, options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
-        })
+        });
+
+    builder.Services
         .AddFluentEmail(emailConfig.Username)
         .AddSmtpSender(new SmtpClient(emailConfig.Server)
         {
@@ -40,13 +64,13 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
         });
 
     builder.Services
-        .AddIdentity<User, Role>(options =>
+        .AddIdentity<User, FoodRecipeSharingPlatform.Enitities.Identity.Role>(options =>
         {
             options.User.RequireUniqueEmail = true;
             options.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders();
 
     builder.Services
         .Configure<IdentityOptions>(options =>
@@ -73,19 +97,6 @@ configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
     builder.Services
         .AddEndpointsApiExplorer()
         .AddSwaggerGen();
-
-
-    builder.Services
-        .AddScoped<IRepositoryFactory, RepositoryFactory>()
-        .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
-        .AddSingleton(TimeProvider.System)
-        .AddScoped<IIngredientRepository, IngredientRepository>()
-        .AddScoped<ICategoryRepository, CategoryRepository>()
-        .AddScoped<IAuthService, AuthService>()
-        .AddScoped<IEmailSenderRepository, EmailSenderRepository>()
-        .AddScoped<IJwtService, JwtService>()
-        .AddScoped<IUserTokenRepository, UserTokenRepository>()
-        .AddTransient<DbInitializer>();
 
     builder.Services
         .AddExceptionHandler<GlobalExceptionHander>()
