@@ -45,4 +45,11 @@ public class CategoryController : ControllerBase
         var response = await _categoryRepository.GetAllCategories(cancellationToken);
         return Ok(Result<List<ResponseCategory>>.CommonSuccess(response));
     }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> GetListCategoriesByName([FromQuery] string name, CancellationToken cancellationToken)
+    {
+        var response = await _categoryRepository.GetAllCategoriesByName(name, cancellationToken);
+        return Ok(Result<List<ResponseCategory>>.CommonSuccess(response));
+    }
 }
