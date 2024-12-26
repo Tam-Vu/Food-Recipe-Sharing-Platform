@@ -10,8 +10,8 @@ public class RepositoryFactory : IRepositoryFactory
     {
         _serviceProvider = serviceProvider;
     }
-    public IBaseRepository<TEntity, Guid> GetRepository<TEntity, Guid>() where TEntity : BaseEntity
+    public IBaseRepository<TEntity, Guid, TDto> GetRepository<TEntity, Guid, TDto>() where TEntity : class where TDto : class
     {
-        return _serviceProvider.GetRequiredService<IBaseRepository<TEntity, Guid>>();
+        return _serviceProvider.GetRequiredService<IBaseRepository<TEntity, Guid, TDto>>();
     }
 }

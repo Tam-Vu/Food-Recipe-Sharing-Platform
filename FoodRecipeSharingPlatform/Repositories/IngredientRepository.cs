@@ -9,12 +9,12 @@ namespace FoodRecipeSharingPlatform.Interfaces;
 
 public class IngredientRepository : IIngredientRepository
 {
-    private readonly IBaseRepository<Ingredient, Guid> _ingredientRepository;
+    private readonly IBaseRepository<Ingredient, Guid, CommandIngredient> _ingredientRepository;
     private readonly IMapper _mapper;
 
     public IngredientRepository(IRepositoryFactory repositoryFactory, IMapper mapper)
     {
-        _ingredientRepository = repositoryFactory.GetRepository<Ingredient, Guid>();
+        _ingredientRepository = repositoryFactory.GetRepository<Ingredient, Guid, CommandIngredient>();
         _mapper = mapper;
     }
 
@@ -22,8 +22,8 @@ public class IngredientRepository : IIngredientRepository
     {
         try
         {
-            var ingredient = _mapper.Map<Ingredient>(commandIngredient);
-            var result = await _ingredientRepository.AddAsync(ingredient, cancellationToken);
+            // var ingredient = _mapper.Map<Ingredient>(commandIngredient);
+            var result = await _ingredientRepository.AddAsync(commandIngredient, cancellationToken);
             var response = _mapper.Map<ResponseCommand>(result);
             return response;
         }

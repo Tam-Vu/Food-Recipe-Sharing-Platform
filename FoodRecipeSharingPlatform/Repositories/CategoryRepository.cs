@@ -1,4 +1,5 @@
 using AutoMapper;
+using FoodRecipeSharingPlatform.Data.Common;
 using FoodRecipeSharingPlatform.Dtos.CategoryDto.CommandCategory;
 using FoodRecipeSharingPlatform.Dtos.CategoryDto.ResponseCategory;
 using FoodRecipeSharingPlatform.Enitities;
@@ -8,13 +9,14 @@ using FoodRecipeSharingPlatform.Interfaces;
 
 namespace FoodRecipeSharingPlatform.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryRepository : BaseRepository<Category, Guid, CommandCategory>, ICategoryRepository
 {
-    private readonly IBaseRepository<Category, Guid> _categoryRepository;
+    private readonly IBaseRepository<Category, Guid, CommandCategory> _categoryRepository;
     private readonly IMapper _mapper;
-    public CategoryRepository(IRepositoryFactory repositoryFactory, IMapper mapper)
+
+    public CategoryRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory) : base(context, mapper)
     {
-        _categoryRepository = repositoryFactory.GetRepository<Category, Guid>();
+        _categoryRepository = repositoryFactory.GetRepository<Category, Guid, CommandCategory>();
         _mapper = mapper;
     }
 
@@ -27,8 +29,7 @@ public class CategoryRepository : ICategoryRepository
             {
                 throw new BadRequestException($"{commandCategory.Name} is already existed in category");
             }
-            var newCategory = _mapper.Map<Category>(commandCategory);
-            return await _categoryRepository.AddAsync(newCategory, cancellationToken);
+            return await _categoryRepository.AddAsync(commandCategory, cancellationToken);
         }
         catch (Exception e)
         {
@@ -61,6 +62,11 @@ public class CategoryRepository : ICategoryRepository
         {
             throw new BadRequestException(e.Message);
         }
+    }
+
+    public Task<List<ResponseCategory>> GetAllCategoriesByName(string name, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<ResponseCommand> UpdateCategory(Guid id, CommandCategory commandCategory, CancellationToken cancellationToken)
