@@ -46,8 +46,8 @@ public class IngredientController : ControllerBase
         return Ok(Result<ResponseCommand>.CreatedSuccess(ingredient));
     }
 
-    [HttpGet("{name}")]
-    public async Task<IActionResult> FindIngredientsByName(string name, CancellationToken cancellationToken)
+    [HttpGet("search")]
+    public async Task<IActionResult> FindIngredientsByName([FromQuery] string name, CancellationToken cancellationToken)
     {
         var ingredients = await _ingredientRepository.GetAllIngredientsByName(name, cancellationToken);
         return Ok(Result<List<ResposeIngredient>>.CommonSuccess(ingredients));

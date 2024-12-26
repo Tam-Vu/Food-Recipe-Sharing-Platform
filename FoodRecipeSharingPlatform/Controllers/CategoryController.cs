@@ -21,14 +21,14 @@ public class CategoryController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddCategory([FromBody] CommandCategory commandCategory, CancellationToken cancellationToken)
     {
-        var response = await _categoryRepository.AddAsync(commandCategory, cancellationToken);
+        var response = await _categoryRepository.AddCategory(commandCategory, cancellationToken);
         return Ok(Result<ResponseCommand>.CreatedSuccess(response));
     }
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CommandCategory commandCategory, CancellationToken cancellationToken)
     {
-        var response = await _categoryRepository.UpdateAsync(id, commandCategory, cancellationToken);
+        var response = await _categoryRepository.UpdateCategory(id, commandCategory, cancellationToken);
         return Ok(Result<ResponseCommand>.CommonSuccess(response));
     }
 
@@ -39,10 +39,10 @@ public class CategoryController : ControllerBase
         return Ok(Result<ResponseCommand>.CommonSuccess(response));
     }
 
-    // [HttpGet]
-    // public async Task<IActionResult> GetListCategories(CancellationToken cancellationToken)
-    // {
-    //     var response = await _categoryRepository.GetAllCategories(cancellationToken);
-    //     return Ok(Result<List<ResponseCategory>>.CommonSuccess(response));
-    // }
+    [HttpGet]
+    public async Task<IActionResult> GetListCategories(CancellationToken cancellationToken)
+    {
+        var response = await _categoryRepository.GetAllCategories(cancellationToken);
+        return Ok(Result<List<ResponseCategory>>.CommonSuccess(response));
+    }
 }
