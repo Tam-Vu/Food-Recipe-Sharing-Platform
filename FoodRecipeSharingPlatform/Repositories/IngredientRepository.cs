@@ -1,48 +1,44 @@
 using AutoMapper;
+using FoodRecipeSharingPlatform.Data.Common;
 using FoodRecipeSharingPlatform.Dtos.IngredientDto.CommandIngredient;
 using FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
+using FoodRecipeSharingPlatform.Repositories;
 
 namespace FoodRecipeSharingPlatform.Interfaces;
 
-public class IngredientRepository : IIngredientRepository
+public class IngredientRepository : BaseRepository<Ingredient, Guid, CommandIngredient>, IIngredientRepository
 {
     private readonly IBaseRepository<Ingredient, Guid, CommandIngredient> _ingredientRepository;
-    private readonly IMapper _mapper;
 
-    public IngredientRepository(IRepositoryFactory repositoryFactory, IMapper mapper)
+    public IngredientRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory) : base(context, mapper)
     {
         _ingredientRepository = repositoryFactory.GetRepository<Ingredient, Guid, CommandIngredient>();
-        _mapper = mapper;
     }
 
     public async Task<ResponseCommand> AddIngredient(CommandIngredient commandIngredient, CancellationToken cancellationToken)
     {
         try
         {
-            // var ingredient = _mapper.Map<Ingredient>(commandIngredient);
+            var checkIngredient = await _ingredientRepository.FindOneAsync(x => x.Name == commandIngredient.Name, cancellationToken);
+            if (checkIngredient != null)
+            {
+                throw new BadRequestException($"{commandIngredient.Name} is already existed in ingredient");
+            }
             var result = await _ingredientRepository.AddAsync(commandIngredient, cancellationToken);
             var response = _mapper.Map<ResponseCommand>(result);
             return response;
         }
-        catch (Exception e)
+        catch (BadRequestException)
         {
-            throw new BadRequestException(e.Message);
-        }
-    }
-
-    public async Task<ResponseCommand> DeleteIngredient(Guid id, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var ingredient = await _ingredientRepository.GetByIdAsync(id, cancellationToken);
-            return await _ingredientRepository.DeleteAsync(ingredient, cancellationToken);
+            throw;
         }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
@@ -56,7 +52,8 @@ public class IngredientRepository : IIngredientRepository
         }
         catch (Exception e)
         {
-            throw new BadHttpRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
@@ -70,7 +67,8 @@ public class IngredientRepository : IIngredientRepository
         }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
@@ -78,13 +76,27 @@ public class IngredientRepository : IIngredientRepository
     {
         try
         {
+            var checkIngredient = await _ingredientRepository.FindOneAsync(x => x.Name == commandIngredient.Name, cancellationToken);
+            if (checkIngredient != null)
+            {
+                throw new BadRequestException($"{commandIngredient.Name} already exists");
+            }
             var ingredient = await _ingredientRepository.GetByIdAsync(id, cancellationToken);
+            if (ingredient == null)
+            {
+                throw new BadRequestException($"{commandIngredient.Name} not found");
+            }
             _mapper.Map(commandIngredient, ingredient);
             return await _ingredientRepository.UpdateAsync(ingredient, cancellationToken);
         }
+        catch (BadRequestException)
+        {
+            throw;
+        }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
