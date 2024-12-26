@@ -24,12 +24,12 @@ public class AuthService : IAuthService
     private readonly IUserTokenRepository _userTokenRepository;
     private readonly IEmailSenderRepository _emailSenderRepository;
     // private readonly ConnectionMultiplexer _redis;
-    private readonly IIdentityService _identityService;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IUserServiceRepository _userServiceRepository;
     public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IJwtService jwtSerivce,
         IMapper mapper, IUserTokenRepository userTokenRepository, IEmailSenderRepository emailSenderRepository,
         // ConnectionMultiplexer redis, 
-        IIdentityService identityService,
+        IUnitOfWork unitOfWork,
         IUserServiceRepository userServiceRepository)
     {
         _userManager = userManager;
@@ -39,7 +39,7 @@ public class AuthService : IAuthService
         _userTokenRepository = userTokenRepository;
         _emailSenderRepository = emailSenderRepository;
         // _redis = redis;
-        _identityService = identityService;
+        _unitOfWork = unitOfWork;
         _userServiceRepository = userServiceRepository;
     }
 
@@ -68,6 +68,7 @@ public class AuthService : IAuthService
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             throw new BadRequestException("Change password failed, please try later");
         }
     }
@@ -91,6 +92,7 @@ public class AuthService : IAuthService
 
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             throw new BadRequestException("Some errors occur, please try later");
         }
     }
@@ -111,6 +113,7 @@ public class AuthService : IAuthService
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             throw new BadRequestException("Some errors occur, please try later");
         }
     }
@@ -171,7 +174,8 @@ public class AuthService : IAuthService
         }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
@@ -179,6 +183,7 @@ public class AuthService : IAuthService
     {
         try
         {
+            _unitOfWork.CreateTransaction();
             var checkEmail = await _userManager.FindByEmailAsync(registerDto.Email);
             if (checkEmail != null)
             {
@@ -204,11 +209,21 @@ public class AuthService : IAuthService
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             await _emailSenderRepository.SendConfirmEmailCode(user.Email!, token, cancellationToken);
             var result = _mapper.Map<ResponseCommand>(user);
+            _unitOfWork.Commit();
             return result;
+        }
+        catch (BadRequestException)
+        {
+            throw;
         }
         catch (Exception e)
         {
+            _unitOfWork.Rollback();
             throw new BadRequestException(e.Message);
+        }
+        finally
+        {
+            _unitOfWork.Dispose();
         }
     }
 
@@ -230,6 +245,7 @@ public class AuthService : IAuthService
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             throw new BadRequestException("Reset password failed, please try later");
         }
     }
