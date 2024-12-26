@@ -31,20 +31,8 @@ public class CategoryRepository : BaseRepository<Category, Guid, CommandCategory
         }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
-        }
-    }
-
-    public async Task<ResponseCommand> DeleteCategory(Guid id, CancellationToken cancellationToken)
-    {
-        try
-        {
-            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
-            return await _categoryRepository.DeleteAsync(category, cancellationToken);
-        }
-        catch (Exception e)
-        {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
@@ -58,13 +46,24 @@ public class CategoryRepository : BaseRepository<Category, Guid, CommandCategory
         }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 
-    public Task<List<ResponseCategory>> GetAllCategoriesByName(string name, CancellationToken cancellationToken)
+    public async Task<List<ResponseCategory>> GetAllCategoriesByName(string name, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var categories = await _categoryRepository.GetAllAsync(x => x.Name.Contains(name), cancellationToken);
+            var result = _mapper.Map<List<ResponseCategory>>(categories);
+            return result;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
+        }
     }
 
     public async Task<ResponseCommand> UpdateCategory(Guid id, CommandCategory commandCategory, CancellationToken cancellationToken)
@@ -86,7 +85,8 @@ public class CategoryRepository : BaseRepository<Category, Guid, CommandCategory
         }
         catch (Exception e)
         {
-            throw new BadRequestException(e.Message);
+            Console.WriteLine(e.Message);
+            throw new BadRequestException("Some errors occurred, please try again later");
         }
     }
 }
