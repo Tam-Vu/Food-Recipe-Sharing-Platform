@@ -22,7 +22,7 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
 
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
-            .Matches(@"^(\+[0-9]{9})$").WithMessage("Phone number is invalid");
+            .Matches(@"^\d{10}$").WithMessage("Phone number is not valid");
 
         RuleFor(x => x.FullName).NotEmpty();
     }

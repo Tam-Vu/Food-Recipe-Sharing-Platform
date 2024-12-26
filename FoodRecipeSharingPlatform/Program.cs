@@ -35,6 +35,7 @@ configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
         .AddSingleton(jwtConfig)
         .AddScoped<IRepositoryFactory, RepositoryFactory>()
         .AddScoped(typeof(IBaseRepository<,,>), typeof(BaseRepository<,,>))
+        .AddTransient<IUnitOfWork, UnitOfWork>()
         .AddScoped<IJwtService, JwtService>()
         .AddScoped<IAuthService, AuthService>()
         .AddSingleton(TimeProvider.System)

@@ -1,5 +1,7 @@
 using FluentEmail.Core;
+using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Identity.Client;
 
 namespace FoodRecipeSharingPlatform.Repositories;
