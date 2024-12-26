@@ -1,5 +1,6 @@
 using System.Net.Mail;
 using System.Reflection;
+using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using FoodRecipeSharingPlatform.Configurations.Binding;
@@ -12,8 +13,11 @@ using FoodRecipeSharingPlatform.Interfaces.Security;
 using FoodRecipeSharingPlatform.Middlewares;
 using FoodRecipeSharingPlatform.Repositories;
 using FoodRecipeSharingPlatform.Services.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +34,7 @@ configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
         // .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
         .AddSingleton(jwtConfig)
         .AddScoped<IRepositoryFactory, RepositoryFactory>()
-        .AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>))
+        .AddScoped(typeof(IBaseRepository<,,>), typeof(BaseRepository<,,>))
         .AddScoped<IJwtService, JwtService>()
         .AddScoped<IAuthService, AuthService>()
         .AddSingleton(TimeProvider.System)
@@ -38,6 +42,7 @@ configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
         .AddScoped<ICategoryRepository, CategoryRepository>()
         .AddScoped<IEmailSenderRepository, EmailSenderRepository>()
         .AddScoped<IUserTokenRepository, UserTokenRepository>()
+        .AddScoped<IUserServiceRepository, UserServiceRepository>()
         .AddScoped<IIdentityService, IdentityService>()
         .AddTransient<DbInitializer>();
 
@@ -92,11 +97,58 @@ configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
         .AddControllers(config => config.Filters.Add(typeof(ValidateDtoAttribute)));
 
     builder.Services
-        .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+        .AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(x =>
+        {
+            x.RequireHttpsMetadata = false;
+            x.SaveToken = true;
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtConfig.Issuer,
+                ValidAudience = jwtConfig.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret))
+            };
+        });
 
     builder.Services
         .AddEndpointsApiExplorer()
-        .AddSwaggerGen();
+        .AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new() { Title = "Food Recipe Sharing Platform", Version = "v1" });
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\".\r\n\r\n enter token"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+            options.CustomSchemaIds(type => type.ToString());
+        })
+    .AddAuthorization();
 
     builder.Services
         .AddExceptionHandler<GlobalExceptionHander>()
@@ -117,7 +169,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FoodRecipeSharingPlatform v1"));
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Food Recipe Sharing Platform v1"));
 }
 
 using (var scope = app.Services.CreateScope())

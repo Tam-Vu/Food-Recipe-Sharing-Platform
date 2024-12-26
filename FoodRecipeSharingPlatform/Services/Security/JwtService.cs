@@ -19,7 +19,7 @@ public class JwtService : IJwtService
     public string GenerateToken(Guid guid, string Email, string FullName, string UserName, List<string> roles)
     {
         var claims = new[]
-{
+            {
                 new Claim(ClaimTypes.NameIdentifier, guid.ToString()),
                 new Claim(ClaimTypes.Email, Email),
                 new Claim("FullName",FullName),

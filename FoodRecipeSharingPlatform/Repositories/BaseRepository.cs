@@ -1,9 +1,7 @@
-using System.Globalization;
 using System.Linq.Expressions;
 using AutoMapper;
 using EFCore.BulkExtensions;
 using FoodRecipeSharingPlatform.Data.Common;
-using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
@@ -12,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace FoodRecipeSharingPlatform.Repositories;
-public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
-       where TEntity : BaseEntity
+public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey, TDto>
+       where TEntity : class where TDto : class
 {
     protected readonly ApplicationDbContext _context;
     protected readonly IMapper _mapper;
@@ -24,8 +22,9 @@ public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
         _mapper = mapper;
         _dbSet = _context.Set<TEntity>();
     }
-    public virtual async Task<ResponseCommand> AddAsync(TEntity entity, CancellationToken cancellationToken)
+    public virtual async Task<ResponseCommand> AddAsync(TDto dto, CancellationToken cancellationToken)
     {
+        var entity = _mapper.Map<TEntity>(dto);
         var result = (await _dbSet.AddAsync(entity, cancellationToken)).Entity;
         await _context.SaveChangesAsync(cancellationToken);
         var test = _mapper.Map<ResponseCommand>(result);
@@ -62,14 +61,16 @@ public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
         }
     }
 
-    public virtual async Task DeleteByIdAsync(TKey id, CancellationToken cancellationToken)
+    public virtual async Task<ResponseCommand> DeleteByIdAsync(TKey id, CancellationToken cancellationToken)
     {
         var entity = await _dbSet.FindAsync(id);
-        if (entity != null)
-        {
-            _dbSet.RemoveRange(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
+        // if (entity != null)
+        // {
+        // }
+        _dbSet.RemoveRange(entity!);
+        await _context.SaveChangesAsync(cancellationToken);
+        _mapper.Map<ResponseCommand>(entity);
+        return _mapper.Map<ResponseCommand>(entity);
     }
 
     public virtual async Task DeleteByModel(TEntity entity, CancellationToken cancellationToken)
@@ -191,6 +192,15 @@ public class BaseRepository<TEntity, TKey> : IBaseRepository<TEntity, TKey>
     public virtual async Task<ResponseCommand> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
     {
         _dbSet.Update(entity);
+        await _context.SaveChangesAsync(cancellationToken);
+        return _mapper.Map<ResponseCommand>(entity);
+    }
+
+    public virtual async Task<ResponseCommand> UpdateAsync(Guid id, TDto dto, CancellationToken cancellationToken)
+    {
+        var entity = await _dbSet.FindAsync(id);
+        _mapper.Map(dto, entity);
+        _dbSet.Update(entity!);
         await _context.SaveChangesAsync(cancellationToken);
         return _mapper.Map<ResponseCommand>(entity);
     }

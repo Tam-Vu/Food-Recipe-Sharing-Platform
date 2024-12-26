@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace FoodRecipeSharingPlatform.Interfaces;
 
 
-public interface IBaseRepository<TEntity, TKey> where TEntity : BaseEntity
+public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class where TDto : class
 {
     IQueryable<TEntity> All();
 
@@ -58,11 +58,12 @@ public interface IBaseRepository<TEntity, TKey> where TEntity : BaseEntity
        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
        CancellationToken cancellationToken);
 
-    Task<ResponseCommand> AddAsync(TEntity entity, CancellationToken cancellationToken);
+    Task<ResponseCommand> AddAsync(TDto dto, CancellationToken cancellationToken);
 
     Task<IEnumerable<ResponseCommand>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
 
     Task<ResponseCommand> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
+    Task<ResponseCommand> UpdateAsync(Guid id, TDto dto, CancellationToken cancellationToken);
 
     Task<List<ResponseCommand>> UpdateRangeAsync(List<TEntity> entities, CancellationToken cancellationToken);
 
@@ -70,7 +71,7 @@ public interface IBaseRepository<TEntity, TKey> where TEntity : BaseEntity
 
     Task<ResponseCommand> DeleteAsync(TEntity entity, CancellationToken cancellationToken);
 
-    Task DeleteByIdAsync(TKey id, CancellationToken cancellationToken);
+    Task<ResponseCommand> DeleteByIdAsync(TKey id, CancellationToken cancellationToken);
     Task DeleteMultiByIdAsync(ICollection<TKey> ids, CancellationToken cancellationToken);
     Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
     Task DeleteByModel(TEntity entity, CancellationToken cancellationToken);

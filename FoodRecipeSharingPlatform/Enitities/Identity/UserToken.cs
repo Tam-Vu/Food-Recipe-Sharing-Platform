@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace FoodRecipeSharingPlatform.Enitities.Identity
 {
-    public class UserToken : IdentityUserToken<Guid>
+    public class UserToken
     {
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset LastModifiedAt { get; set; }
+        public string UserId { get; set; } = null!;
+        public string LoginProvider { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Value { get; set; } = null!;
     }
 }
