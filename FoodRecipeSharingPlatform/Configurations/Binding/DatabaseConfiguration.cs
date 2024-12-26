@@ -1,7 +1,8 @@
 namespace FoodRecipeSharingPlatform.Configurations.Binding;
 
-public class DatabaseConfiguration
+public sealed class DatabaseConfiguration
 {
     public const string dataConfig = "DatabaseConfiguration";
-    public required string ConnectionString { get; set; }
+    public string RedisConnectionString { get; set; } = null!;
+    public string ConnectionString { get; set; } = null!;
 }

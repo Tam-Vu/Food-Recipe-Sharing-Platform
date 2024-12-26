@@ -1,6 +1,6 @@
 using AutoMapper;
-using FoodRecipeSharingPlatform.Dtos.Gredient.CommandIngredient;
-using FoodRecipeSharingPlatform.Dtos.Gredient.ResposeIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.CommandIngredient;
+using FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
@@ -9,12 +9,12 @@ namespace FoodRecipeSharingPlatform.Interfaces;
 
 public class IngredientRepository : IIngredientRepository
 {
-    private readonly IBaseRepository<Ingredient, Guid> _ingredientRepository;
+    private readonly IBaseRepository<Ingredient, Guid, CommandIngredient> _ingredientRepository;
     private readonly IMapper _mapper;
 
     public IngredientRepository(IRepositoryFactory repositoryFactory, IMapper mapper)
     {
-        _ingredientRepository = repositoryFactory.GetRepository<Ingredient, Guid>();
+        _ingredientRepository = repositoryFactory.GetRepository<Ingredient, Guid, CommandIngredient>();
         _mapper = mapper;
     }
 
@@ -22,8 +22,8 @@ public class IngredientRepository : IIngredientRepository
     {
         try
         {
-            var ingredient = _mapper.Map<Ingredient>(commandIngredient);
-            var result = await _ingredientRepository.AddAsync(ingredient, cancellationToken);
+            // var ingredient = _mapper.Map<Ingredient>(commandIngredient);
+            var result = await _ingredientRepository.AddAsync(commandIngredient, cancellationToken);
             var response = _mapper.Map<ResponseCommand>(result);
             return response;
         }
@@ -57,6 +57,20 @@ public class IngredientRepository : IIngredientRepository
         catch (Exception e)
         {
             throw new BadHttpRequestException(e.Message);
+        }
+    }
+
+    public async Task<List<ResposeIngredient>> GetAllIngredientsByName(string name, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var ingredients = await _ingredientRepository.GetAllAsync(x => x.Name.Contains(name), cancellationToken);
+            var result = _mapper.Map<List<ResposeIngredient>>(ingredients);
+            return result;
+        }
+        catch (Exception e)
+        {
+            throw new BadRequestException(e.Message);
         }
     }
 
