@@ -42,7 +42,7 @@ public class IngredientController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteIngredient(Guid id, CancellationToken cancellationToken)
     {
-        var ingredient = await _ingredientRepository.DeleteIngredient(id, cancellationToken);
+        var ingredient = await _ingredientRepository.DeleteByIdAsync(id, cancellationToken);
         return Ok(Result<ResponseCommand>.CreatedSuccess(ingredient));
     }
 

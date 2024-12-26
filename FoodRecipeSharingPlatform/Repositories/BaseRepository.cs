@@ -157,6 +157,14 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         return entity ?? throw new BadRequestException($"{nameof(TEntity)} not found");
     }
 
+    public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken)
+    {
+        var query = _dbSet.Where(predicate);
+        var entity = await query.FirstOrDefaultAsync(cancellationToken);
+        return entity ?? null;
+    }
+
     public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken)
@@ -177,6 +185,14 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         var query = _dbSet.Where(predicate);
         var entity = await query.SingleAsync(cancellationToken);
         return entity ?? throw new BadRequestException($"{nameof(TEntity)} not found");
+    }
+
+    public virtual async Task<TEntity?> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,
+    CancellationToken cancellationToken)
+    {
+        var query = _dbSet.Where(predicate);
+        var entity = await query.SingleAsync(cancellationToken);
+        return entity ?? null;
     }
 
     public virtual async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,

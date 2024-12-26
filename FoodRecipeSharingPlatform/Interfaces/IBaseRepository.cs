@@ -19,11 +19,17 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
     Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
+    Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken);
+
     Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken);
 
     Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken);
+
+    Task<TEntity?> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
     Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> predicate,
