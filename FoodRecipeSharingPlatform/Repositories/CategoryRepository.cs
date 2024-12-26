@@ -12,12 +12,10 @@ namespace FoodRecipeSharingPlatform.Repositories;
 public class CategoryRepository : BaseRepository<Category, Guid, CommandCategory>, ICategoryRepository
 {
     private readonly IBaseRepository<Category, Guid, CommandCategory> _categoryRepository;
-    private readonly IMapper _mapper;
 
     public CategoryRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory) : base(context, mapper)
     {
         _categoryRepository = repositoryFactory.GetRepository<Category, Guid, CommandCategory>();
-        _mapper = mapper;
     }
 
     public async Task<ResponseCommand> AddCategory(CommandCategory commandCategory, CancellationToken cancellationToken)
@@ -73,7 +71,16 @@ public class CategoryRepository : BaseRepository<Category, Guid, CommandCategory
     {
         try
         {
+            var checkCategory = await _categoryRepository.FindOneAsync(x => x.Name == commandCategory.Name, cancellationToken);
+            if (checkCategory != null)
+            {
+                throw new BadRequestException($"{commandCategory.Name} is already existed in category");
+            }
             var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+            if (category == null)
+            {
+                throw new BadRequestException("Category not found");
+            }
             _mapper.Map(commandCategory, category);
             return await _categoryRepository.UpdateAsync(category, cancellationToken);
         }
