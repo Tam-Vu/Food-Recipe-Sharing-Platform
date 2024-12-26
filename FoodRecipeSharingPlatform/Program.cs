@@ -12,6 +12,7 @@ using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
 using FoodRecipeSharingPlatform.Middlewares;
 using FoodRecipeSharingPlatform.Repositories;
+using FoodRecipeSharingPlatform.Services.Common;
 using FoodRecipeSharingPlatform.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -24,18 +25,22 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 var emailConfig = new EmailSenderConfiguration();
-configuration.GetSection(EmailSenderConfiguration.EmailSettingConfig).Bind(emailConfig);
+configuration.GetSection(EmailSenderConfiguration.SectionName).Bind(emailConfig);
 var databaseConfig = new DatabaseConfiguration();
-configuration.GetSection(DatabaseConfiguration.dataConfig).Bind(databaseConfig);
+configuration.GetSection(DatabaseConfiguration.SectionName).Bind(databaseConfig);
 var jwtConfig = new JwtConfiguration();
-configuration.GetSection(JwtConfiguration.jwtConfig).Bind(jwtConfig);
+configuration.GetSection(JwtConfiguration.SectionName).Bind(jwtConfig);
+var cloudinaryConfig = new CloudinaryAccount();
+configuration.GetSection(CloudinaryAccount.SectionName).Bind(cloudinaryConfig);
 {
     builder.Services
         // .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
         .AddSingleton(jwtConfig)
+        .AddSingleton(cloudinaryConfig)
         .AddScoped<IRepositoryFactory, RepositoryFactory>()
         .AddScoped(typeof(IBaseRepository<,,>), typeof(BaseRepository<,,>))
         .AddTransient<IUnitOfWork, UnitOfWork>()
+        .AddScoped<ICloudinaryService, CloudinaryService>()
         .AddScoped<IJwtService, JwtService>()
         .AddScoped<IAuthService, AuthService>()
         .AddSingleton(TimeProvider.System)

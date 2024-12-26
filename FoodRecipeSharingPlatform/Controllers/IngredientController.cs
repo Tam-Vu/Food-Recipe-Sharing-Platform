@@ -13,7 +13,7 @@ namespace FoodRecipeSharingPlatform.Controllers;
 public class IngredientController : ControllerBase
 {
     private readonly IIngredientRepository _ingredientRepository;
-    public IngredientController(IIngredientRepository ingredientRepository, IMapper mapper)
+    public IngredientController(IIngredientRepository ingredientRepository)
     {
         _ingredientRepository = ingredientRepository;
     }
