@@ -34,6 +34,7 @@ public class UserServiceRepository : IUserServiceRepository
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new BadRequestException("System error, please try later");
         }
     }
@@ -52,6 +53,7 @@ public class UserServiceRepository : IUserServiceRepository
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new BadRequestException("System error, please try later");
         }
     }
@@ -69,6 +71,7 @@ public class UserServiceRepository : IUserServiceRepository
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new BadRequestException("User not found");
         }
     }
@@ -93,6 +96,7 @@ public class UserServiceRepository : IUserServiceRepository
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new BadRequestException("System error, lease try later");
         }
     }
@@ -123,6 +127,7 @@ public class UserServiceRepository : IUserServiceRepository
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new BadRequestException("Get user by token failed, please try later");
         }
     }
@@ -148,6 +153,7 @@ public class UserServiceRepository : IUserServiceRepository
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             throw new BadRequestException("System error, please try later");
         }
     }

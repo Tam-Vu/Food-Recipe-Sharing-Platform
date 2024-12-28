@@ -49,7 +49,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         }
         foreach (var entry in context.ChangeTracker.Entries())
         {
-            if (entry.Entity is User || entry.Entity is Role || entry.Entity is RoleClaim || entry.Entity is UserRole
+            if (entry.Entity is User || entry.Entity is RoleClaim || entry.Entity is UserRole
             || entry.Entity is UserClaim || entry.Entity is UserLogin || entry.Entity is UserToken)
             {
                 if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())

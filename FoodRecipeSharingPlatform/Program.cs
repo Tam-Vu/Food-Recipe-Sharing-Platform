@@ -9,9 +9,11 @@ using FoodRecipeSharingPlatform.Data.Common;
 using FoodRecipeSharingPlatform.Data.Interceptor;
 using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Interfaces;
+using FoodRecipeSharingPlatform.Interfaces.Builder;
 using FoodRecipeSharingPlatform.Interfaces.Security;
 using FoodRecipeSharingPlatform.Middlewares;
 using FoodRecipeSharingPlatform.Repositories;
+using FoodRecipeSharingPlatform.Repositories.Builder;
 using FoodRecipeSharingPlatform.Services.Common;
 using FoodRecipeSharingPlatform.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,6 +48,8 @@ configuration.GetSection(CloudinaryAccount.SectionName).Bind(cloudinaryConfig);
         .AddSingleton(TimeProvider.System)
         .AddScoped<IIngredientRepository, IngredientRepository>()
         .AddScoped<ICategoryRepository, CategoryRepository>()
+        .AddScoped<IFoodBuilder, FoodBuilder>()
+        .AddScoped<IFoodRepository, FoodRepository>()
         .AddScoped<IEmailSenderRepository, EmailSenderRepository>()
         .AddScoped<IUserTokenRepository, UserTokenRepository>()
         .AddScoped<IUserServiceRepository, UserServiceRepository>()

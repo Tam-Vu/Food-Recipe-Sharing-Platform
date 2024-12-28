@@ -1,6 +1,5 @@
 using AutoMapper;
 using FoodRecipeSharingPlatform.Data.Common;
-using FoodRecipeSharingPlatform.Data.Migrations;
 using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;

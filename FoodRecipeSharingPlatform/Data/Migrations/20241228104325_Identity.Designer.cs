@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodRecipeSharingPlatform.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241222090805_Identity")]
+    [Migration("20241228104325_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
