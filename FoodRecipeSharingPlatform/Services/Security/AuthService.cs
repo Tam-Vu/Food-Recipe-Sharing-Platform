@@ -126,6 +126,9 @@ public class AuthService : IAuthService
             if (user == null)
             {
                 user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmail);
+            }
+            if (user == null)
+            {
                 throw new BadRequestException("Username or password is incorrect");
             }
             var resultSignIn = await _signInManager.PasswordSignInAsync(user, loginDto.Password, loginDto.RememberMe, true);

@@ -65,6 +65,7 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
        CancellationToken cancellationToken);
 
     Task<ResponseCommand> AddAsync(TDto dto, CancellationToken cancellationToken);
+    Task<ResponseCommand> AddAsync(TEntity entity, CancellationToken cancellationToken);
 
     Task<IEnumerable<ResponseCommand>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
 

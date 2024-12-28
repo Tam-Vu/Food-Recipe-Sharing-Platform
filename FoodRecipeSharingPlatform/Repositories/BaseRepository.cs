@@ -27,8 +27,16 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         var entity = _mapper.Map<TEntity>(dto);
         var result = (await _dbSet.AddAsync(entity, cancellationToken)).Entity;
         await _context.SaveChangesAsync(cancellationToken);
-        var test = _mapper.Map<ResponseCommand>(result);
-        return test;
+        var final = _mapper.Map<ResponseCommand>(result);
+        return final;
+    }
+
+    public virtual async Task<ResponseCommand> AddAsync(TEntity entity, CancellationToken cancellationToken)
+    {
+        var result = (await _dbSet.AddAsync(entity, cancellationToken)).Entity;
+        await _context.SaveChangesAsync(cancellationToken);
+        var final = _mapper.Map<ResponseCommand>(result);
+        return final;
     }
 
     public virtual async Task<IEnumerable<ResponseCommand>> AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)

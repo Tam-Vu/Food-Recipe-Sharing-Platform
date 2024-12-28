@@ -80,6 +80,7 @@ public class JwtService : IJwtService
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             return null;
         }
     }
