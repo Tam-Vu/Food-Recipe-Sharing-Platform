@@ -1,6 +1,7 @@
 using AutoMapper;
 using FoodRecipeSharingPlatform.Data.Common;
 using FoodRecipeSharingPlatform.Dtos.FoodDto.CommandFood.CommandFood;
+using FoodRecipeSharingPlatform.Dtos.FoodDto.ResponseFood.ResponseFood;
 using FoodRecipeSharingPlatform.Enitities;
 using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Entities.Models;
@@ -8,6 +9,7 @@ using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Builder;
 using FoodRecipeSharingPlatform.Interfaces.Security;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace FoodRecipeSharingPlatform.Repositories;
@@ -56,6 +58,41 @@ public class FoodRepository : BaseRepository<Food, Guid, CommandFood>, IFoodRepo
             }
             Console.WriteLine(ex.Message);
             throw new BadRequestException("Failed to create food, please try later" + ex.Message);
+        }
+    }
+
+    public Task<List<ResponseFood>> GetAllFoodsAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var foods = _foodRepository.GetAllAsync(i => i.Include(x => x.FoodIngredients!)
+                                                            .ThenInclude(x => x.Food!)
+                                                            .Include(x => x.Steps!),
+                                                        cancellationToken);
+            var result = _mapper.Map<List<ResponseFood>>(foods);
+            return Task.FromResult(result);
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Log GetFoodsByNameAsync error: " + ex.Message);
+            throw new BadRequestException("Failed to get food, please try later");
+        }
+    }
+
+    public async Task<List<ResponseListFood>> GetFoodsByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var foods = await _foodRepository.GetAllAsync(c => c.Name.ToLower().Contains(name), cancellationToken);
+            var result = _mapper.Map<List<ResponseListFood>>(foods);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Log GetFoodsByNameAsync error: " + ex.Message);
+            throw new BadRequestException("Failed to get food, please try later");
         }
     }
 }

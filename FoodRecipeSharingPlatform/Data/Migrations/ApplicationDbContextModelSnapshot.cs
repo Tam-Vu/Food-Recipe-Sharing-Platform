@@ -55,8 +55,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AverageStar")
-                        .HasColumnType("text");
+                    b.Property<float?>("AverageStar")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");

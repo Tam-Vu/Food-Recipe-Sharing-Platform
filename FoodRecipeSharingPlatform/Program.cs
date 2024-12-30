@@ -82,7 +82,7 @@ configuration.GetSection(CloudinaryAccount.SectionName).Bind(cloudinaryConfig);
         .AddIdentity<User, FoodRecipeSharingPlatform.Enitities.Identity.Role>(options =>
         {
             options.User.RequireUniqueEmail = true;
-            options.SignIn.RequireConfirmedEmail = true;
+            // options.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
