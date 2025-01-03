@@ -123,10 +123,7 @@ public class AuthService : IAuthService
         try
         {
             var user = await _userManager.FindByEmailAsync(loginDto.UserNameOrEmail);
-            if (user == null)
-            {
-                user = await _userManager.FindByNameAsync(loginDto.UserNameOrEmail);
-            }
+            user ??= await _userManager.FindByNameAsync(loginDto.UserNameOrEmail);
             if (user == null)
             {
                 throw new BadRequestException("Username or password is incorrect");

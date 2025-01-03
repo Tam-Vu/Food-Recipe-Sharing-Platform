@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FoodRecipeSharingPlatform.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241228104325_Identity")]
+    [Migration("20241230114436_Identity")]
     partial class Identity
     {
         /// <inheritdoc />
@@ -58,8 +58,8 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AverageStar")
-                        .HasColumnType("text");
+                    b.Property<float?>("AverageStar")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");

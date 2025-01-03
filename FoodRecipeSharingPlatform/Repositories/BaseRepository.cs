@@ -108,6 +108,14 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         return entities;
     }
 
+    public virtual async Task<List<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
+    CancellationToken cancellationToken)
+    {
+        var query = includeQuery(_dbSet);
+        var entities = await query.ToListAsync(cancellationToken);
+        return entities;
+    }
+
     public virtual async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
         CancellationToken cancellationToken)
@@ -155,6 +163,10 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
     {
         var entity = await _dbSet.FindAsync(id, cancellationToken);
         return entity ?? throw new BadRequestException($"{nameof(TEntity)} not found");
+    }
+    public Task<TEntity> GetByIdAsync(TKey id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
     public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,

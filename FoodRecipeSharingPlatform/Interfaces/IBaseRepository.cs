@@ -12,6 +12,10 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
     IQueryable<TEntity> All();
 
     Task<TEntity> GetByIdAsync(TKey id, CancellationToken cancellationToken);
+    Task<TEntity> GetByIdAsync(TKey id,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
+        CancellationToken cancellationToken);
+
 
     Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
@@ -41,6 +45,8 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
     Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken);
 
+    Task<List<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,
+        CancellationToken cancellationToken);
 
     Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery,

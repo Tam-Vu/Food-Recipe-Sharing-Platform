@@ -115,7 +115,7 @@ namespace FoodRecipeSharingPlatform.Data.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Image = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    AverageStar = table.Column<string>(type: "text", nullable: true),
+                    AverageStar = table.Column<float>(type: "real", nullable: true),
                     CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
