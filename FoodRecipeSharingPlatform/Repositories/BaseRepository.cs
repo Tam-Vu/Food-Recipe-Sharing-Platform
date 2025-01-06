@@ -164,10 +164,6 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
         var entity = await _dbSet.FindAsync(id, cancellationToken);
         return entity ?? throw new BadRequestException($"{nameof(TEntity)} not found");
     }
-    public Task<TEntity> GetByIdAsync(TKey id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeQuery, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
 
     public virtual async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken)

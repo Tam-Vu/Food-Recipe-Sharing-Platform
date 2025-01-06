@@ -32,6 +32,11 @@ public class FoodController : ControllerBase
     //     return Ok(Result<List<ResponseFood>>.CommonSuccess(response));
     // }
     [HttpGet("{id}")]
+    public async Task<IActionResult> GetFoodById(Guid id, CancellationToken cancellationToken)
+    {
+        var response = await _foodRepository.GetFoodByIdAsync(id, cancellationToken);
+        return Ok(Result<ResponseFood>.CommonSuccess(response));
+    }
 
     [HttpGet("/search")]
     public async Task<IActionResult> GetFoodsByName([FromQuery] string name, CancellationToken cancellationToken)

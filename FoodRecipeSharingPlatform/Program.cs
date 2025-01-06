@@ -22,6 +22,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using Serilog;
+using Serilog.Sinks.Slack;
+using Serilog.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -34,11 +37,15 @@ var jwtConfig = new JwtConfiguration();
 configuration.GetSection(JwtConfiguration.SectionName).Bind(jwtConfig);
 var cloudinaryConfig = new CloudinaryAccount();
 configuration.GetSection(CloudinaryAccount.SectionName).Bind(cloudinaryConfig);
+var JsonConfiguration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
 {
     builder.Services
         // .AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(databaseConfig.RedisConnectionString))
         .AddSingleton(jwtConfig)
         .AddSingleton(cloudinaryConfig)
+        .AddHttpClient()
         .AddScoped<IRepositoryFactory, RepositoryFactory>()
         .AddScoped(typeof(IBaseRepository<,,>), typeof(BaseRepository<,,>))
         .AddTransient<IUnitOfWork, UnitOfWork>()
@@ -55,6 +62,11 @@ configuration.GetSection(CloudinaryAccount.SectionName).Bind(cloudinaryConfig);
         .AddScoped<IUserServiceRepository, UserServiceRepository>()
         .AddScoped<IIdentityService, IdentityService>()
         .AddTransient<DbInitializer>();
+
+    builder.Host.UseSerilog((context, configuration) =>
+    {
+        configuration.ReadFrom.Configuration(context.Configuration);
+    });
 
     builder.Services
         .AddScoped<AuditableEntityInterceptor>();
@@ -163,14 +175,13 @@ configuration.GetSection(CloudinaryAccount.SectionName).Bind(cloudinaryConfig);
     builder.Services
         .AddExceptionHandler<GlobalExceptionHander>()
         .AddProblemDetails();
-
 }
 
 var app = builder.Build();
 {
     app.UseHttpsRedirection();
     // app.UseMiddleware<>();
-    app.UseHttpsRedirection();
+    app.UseSerilogRequestLogging();
     app.UseAuthorization();
     app.UseExceptionHandler();
     app.MapControllers();
