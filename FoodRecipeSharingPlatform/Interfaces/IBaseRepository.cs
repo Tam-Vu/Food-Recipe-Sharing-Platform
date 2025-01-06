@@ -85,4 +85,5 @@ public interface IBaseRepository<TEntity, TKey, TDto> where TEntity : class wher
     Task DeleteAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
     Task DeleteByModel(TEntity entity, CancellationToken cancellationToken);
     Task DeleteByMultiModel(List<TEntity> entities, CancellationToken cancellationToken);
+    Task DeleteByMulti(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
 }
