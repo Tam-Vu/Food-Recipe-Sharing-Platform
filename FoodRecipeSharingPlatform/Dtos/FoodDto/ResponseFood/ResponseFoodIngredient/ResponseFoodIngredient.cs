@@ -2,6 +2,5 @@ namespace FoodRecipeSharingPlatform.Dtos.FoodDto.ResponseFood.ResponseFoodIngred
 
 public record ResponseFoodIngredients
 (
-    string Name,
     string Quantity
 );

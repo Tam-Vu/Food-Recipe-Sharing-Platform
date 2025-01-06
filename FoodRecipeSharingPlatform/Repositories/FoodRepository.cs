@@ -19,12 +19,14 @@ public class FoodRepository : BaseRepository<Food, Guid, CommandFood>, IFoodRepo
     private readonly IFoodBuilder _foodBuilder;
     private readonly IIdentityService _identityService;
     private readonly IBaseRepository<Food, Guid, CommandFood> _foodRepository;
+    private readonly ILogger<FoodRepository> _logger;
 
-    public FoodRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory, IFoodBuilder foodBuilder, IIdentityService identityService) : base(context, mapper)
+    public FoodRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory, IFoodBuilder foodBuilder, IIdentityService identityService, ILogger<FoodRepository> logger) : base(context, mapper)
     {
         _foodRepository = repositoryFactory.GetRepository<Food, Guid, CommandFood>();
         _foodBuilder = foodBuilder;
         _identityService = identityService;
+        _logger = logger;
     }
 
     public async Task<ResponseCommand> CreateFoodAsync(CommandFood commandFood, CancellationToken cancellationToken)
@@ -61,21 +63,29 @@ public class FoodRepository : BaseRepository<Food, Guid, CommandFood>, IFoodRepo
         }
     }
 
-    public Task<List<ResponseFood>> GetAllFoodsAsync(CancellationToken cancellationToken)
+    public async Task<ResponseFood> GetFoodByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            var foods = _foodRepository.GetAllAsync(i => i.Include(x => x.FoodIngredients!)
-                                                            .ThenInclude(x => x.Food!)
-                                                            .Include(x => x.Steps!),
-                                                        cancellationToken);
-            var result = _mapper.Map<List<ResponseFood>>(foods);
-            return Task.FromResult(result);
+            var food = await _foodRepository.GetSingleAsync(c => c.Id == id, i => i.Include(p => p.FoodIngredients!)
+                                                                                .ThenInclude(p => p.Ingredient!)
+                                                                                .ThenInclude(p => p.FoodIngredients!)
+                                                                                .ThenInclude(p => p.Food!)
+                                                                                .ThenInclude(p => p.Category!)
+                                                                                .ThenInclude(p => p.Foods!)
+                                                                                .ThenInclude(p => p.Steps!)
+                                                                                , cancellationToken);
+            var result = _mapper.Map<ResponseFood>(food);
+            return result;
         }
         catch (Exception ex)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Log GetFoodsByNameAsync error: " + ex.Message);
+            var Details = string.Empty;
+            if (ex.InnerException != null)
+            {
+                Details = ex.InnerException.Message;
+            }
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(FoodRepository), nameof(GetFoodByIdAsync), ex.Message, Details);
             throw new BadRequestException("Failed to get food, please try later");
         }
     }
