@@ -100,6 +100,15 @@ public class BaseRepository<TEntity, TKey, TDto> : IBaseRepository<TEntity, TKey
             await _context.SaveChangesAsync(cancellationToken);
         }
     }
+    public virtual async Task DeleteByMulti(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+    {
+        var entity = await _dbSet.Where(predicate).ToListAsync();
+        if (entity != null)
+        {
+            _dbSet.RemoveRange(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+    }
 
     public virtual async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellationToken)

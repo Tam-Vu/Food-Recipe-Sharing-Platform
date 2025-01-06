@@ -16,7 +16,7 @@ public class GlobalExceptionHander : IExceptionHandler
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
+        _logger.LogError(exception, "Exception occurred at middleware: {Message}", exception.Message);
         if (exception is BaseException baseException)
         {
             var Response = Result<string>.Failure(baseException.StatusCode, baseException.Message);
@@ -28,6 +28,7 @@ public class GlobalExceptionHander : IExceptionHandler
         }
         else
         {
+            _logger.LogError(exception, "Unhandled exception occurred: {Message}", exception.Message);
             var Response = Result<string>.Failure((int)HttpStatusCode.InternalServerError, "Internal Server Error");
             var result = JsonSerializer.Serialize(Response);
             httpContext.Response.ContentType = "application/json";

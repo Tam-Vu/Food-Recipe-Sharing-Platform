@@ -9,8 +9,12 @@ namespace FoodRecipeSharingPlatform.Interfaces;
 public interface IFoodRepository : IBaseRepository<Food, Guid, CommandFood>
 {
     Task<ResponseCommand> CreateFoodAsync(CommandFood commandFoodDto, CancellationToken cancellationToken);
-    // Task<List<ResponseFood>> GetFoodDetails(Guid id, CancellationToken cancellationToken);
+    Task<ResponseCommand> UpdateFoodAsync(Guid id, CommandFood commandFoodDto, CancellationToken cancellationToken);
+    Task<ResponseCommand> DeleteFoodAsync(Guid id, CancellationToken cancellationToken);
     Task<List<ResponseListFood>> GetFoodsByNameAsync(string name, CancellationToken cancellationToken);
+    Task<List<ResponseListFood>> GetFoodsByCategory(Guid CategoryId, CancellationToken cancellationToken);
+    Task<List<ResponseListFood>> GetFoodsOfCurrentUser(CancellationToken cancellationToken);
+    Task<List<ResponseListFood>> GetFoodsByUserId(Guid UserId, CancellationToken cancellationToken);
     Task<ResponseFood> GetFoodByIdAsync(Guid id, CancellationToken cancellationToken);
     // Task UpdateFoodAsync(Food food);
     // Task DeleteFoodAsync(Food food);
