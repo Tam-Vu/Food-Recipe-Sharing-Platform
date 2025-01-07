@@ -8,6 +8,7 @@ using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FoodRecipeSharingPlatform.Repositories;
@@ -18,23 +19,27 @@ public class UserServiceRepository : IUserServiceRepository
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     private readonly IJwtService _jwtService;
-    public UserServiceRepository(IRepositoryFactory repositoryFactory, UserManager<User> userManager, IMapper mapper, IJwtService jwtService)
+    private readonly ILogger<UserServiceRepository> _logger;
+    public UserServiceRepository(IRepositoryFactory repositoryFactory, UserManager<User> userManager, IMapper mapper, IJwtService jwtService, ILogger<UserServiceRepository> logger)
     {
         _userRepository = repositoryFactory.GetRepository<User, Guid, ResponseCommand>();
         _userManager = userManager;
         _mapper = mapper;
         _jwtService = jwtService;
+        _logger = logger;
     }
 
-    public Task<List<ResponseUser>> GetAllUser()
+    public async Task<List<ResponseUser>> GetAllUser()
     {
         try
         {
-            throw new NotImplementedException();
+            var users = await _userManager.Users.ToListAsync();
+            var result = _mapper.Map<List<ResponseUser>>(users);
+            return result;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(GetAllUser), ex.Message, ex.InnerException?.Message);
             throw new BadRequestException("System error, please try later");
         }
     }
@@ -51,9 +56,9 @@ public class UserServiceRepository : IUserServiceRepository
             }
             return _mapper.Map<ResponseUser>(result);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(GetCurrentUserDto), ex.Message, ex.InnerException?.Message);
             throw new BadRequestException("System error, please try later");
         }
     }
@@ -69,9 +74,9 @@ public class UserServiceRepository : IUserServiceRepository
             }
             return user;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(GetUserById), ex.Message, ex.InnerException?.Message);
             throw new BadRequestException("User not found");
         }
     }
@@ -94,16 +99,26 @@ public class UserServiceRepository : IUserServiceRepository
             }
             return user;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(GetUserByToken), ex.Message, ex.InnerException?.Message);
             throw new BadRequestException("System error, lease try later");
         }
     }
 
-    public Task<ResponseUser?> GetUserDtoById(Guid id)
+    public async Task<ResponseUser?> GetUserDtoById(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString()) ?? throw new BadRequestException("User not found");
+            var userDto = _mapper.Map<ResponseUser>(user);
+            return userDto;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(GetUserDtoById), ex.Message, ex.InnerException?.Message);
+            throw new BadRequestException("System error, please try later");
+        }
     }
 
     public async Task<ResponseUser?> GetUserDtoByToken(string token)
@@ -125,27 +140,49 @@ public class UserServiceRepository : IUserServiceRepository
             var userDto = _mapper.Map<ResponseUser>(user);
             return userDto;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(GetUserDtoByToken), ex.Message, ex.InnerException?.Message);
             throw new BadRequestException("Get user by token failed, please try later");
         }
     }
 
-    public Task<ResponseCommand> RemoveUser(Guid id)
+    public async Task<ResponseCommand> RemoveUser(Guid id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString()) ?? throw new BadRequestException("User not found");
+            var check = await _userManager.DeleteAsync(user);
+            if (check.Succeeded != true)
+            {
+                _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error}", nameof(UserServiceRepository), nameof(RemoveUser), check.Errors.ToString());
+                throw new BadRequestException("Remove user failed");
+            }
+            var result = _mapper.Map<ResponseCommand>(user);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error} \nDetails: {Details}", nameof(UserServiceRepository), nameof(RemoveUser), ex.Message, ex.InnerException?.Message);
+            throw new BadRequestException("System error, please try later");
+        }
     }
 
     public async Task<ResponseCommand> UpdateUser(CommandUser commandUser)
     {
         try
         {
-            var user = _mapper.Map<User>(commandUser);
+            var token = _jwtService.GetCurrentToken();
+            var user = await GetUserByToken(token!);
+            if (user is null)
+            {
+                throw new BadRequestException("User not found");
+            }
+            _mapper.Map(commandUser, user);
             var check = await _userManager.UpdateAsync(user);
             if (check.Succeeded != true)
             {
-                //log error here
+                _logger.LogError("Error in {ClassName}, at {MethodName}: \nError: {Error}", nameof(UserServiceRepository), nameof(UpdateUser), check.Errors.ToString());
                 throw new BadRequestException("Update user failed");
             }
             var result = _mapper.Map<ResponseCommand>(user);

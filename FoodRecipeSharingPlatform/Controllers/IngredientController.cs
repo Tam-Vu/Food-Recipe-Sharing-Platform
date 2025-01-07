@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodRecipeSharingPlatform.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class IngredientController : ControllerBase
+public class ingredientController : ControllerBase
 {
     private readonly IIngredientRepository _ingredientRepository;
-    public IngredientController(IIngredientRepository ingredientRepository)
+    public ingredientController(IIngredientRepository ingredientRepository)
     {
         _ingredientRepository = ingredientRepository;
     }

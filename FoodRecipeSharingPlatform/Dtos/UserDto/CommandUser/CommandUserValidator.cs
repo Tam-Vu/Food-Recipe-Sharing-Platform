@@ -15,7 +15,7 @@ public class CommandUserValidator : AbstractValidator<CommandUser>
 
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
-            .Matches(@"^(\+[0-9]{9})$").WithMessage("Phone number must be in international format");
+            .Matches(@"^[0-9]{10}$").WithMessage("Phone number must be in international format");
 
         RuleFor(x => x.FullName)
             .NotEmpty();
