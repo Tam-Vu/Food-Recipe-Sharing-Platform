@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace FoodRecipeSharingPlatform.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-public class CloudinaryController : ControllerBase
+public class cloudinaryController : ControllerBase
 {
     private readonly ICloudinaryService _cloudinaryService;
-    public CloudinaryController(ICloudinaryService cloudinaryService)
+    public cloudinaryController(ICloudinaryService cloudinaryService)
     {
         _cloudinaryService = cloudinaryService;
     }

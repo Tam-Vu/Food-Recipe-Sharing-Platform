@@ -11,10 +11,10 @@ namespace FoodRecipeSharingPlatform.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FoodController : ControllerBase
+public class foodController : ControllerBase
 {
     private readonly IFoodRepository _foodRepository;
-    public FoodController(IFoodRepository foodRepository)
+    public foodController(IFoodRepository foodRepository)
     {
         _foodRepository = foodRepository;
     }

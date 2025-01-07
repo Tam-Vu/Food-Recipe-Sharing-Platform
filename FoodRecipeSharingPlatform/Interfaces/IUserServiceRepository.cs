@@ -15,4 +15,5 @@ public interface IUserServiceRepository
     Task<ResponseCommand> RemoveUser(Guid id);
     Task<ResponseCommand> UpdateUser(CommandUser commandUser);
     Task<List<ResponseUser>> GetAllUser();
+
 }
