@@ -54,7 +54,7 @@
   - Declares common response data such as "ResponseCommand",  "PaginationResponse", "Result" (format all response).
   - Called by the `Repositories`.
 - Enums: contains enums for entities.
-- Exceptions
+- Exceptions:
 	- Contains all exceptions for all application, can be customized.
 	- Called by `Repositories`.
 - Middlewares:
@@ -130,7 +130,7 @@ Use the `appsettings.Development.json` to create your configuration file
 How to start your project
 
 ```bash
-cd JobSite
+cd FoodRecipeSharingPlatform
 dotnet restore
 dotnet run
 ```
