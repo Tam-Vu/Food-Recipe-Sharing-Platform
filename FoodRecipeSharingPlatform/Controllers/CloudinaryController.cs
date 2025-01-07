@@ -1,8 +1,11 @@
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodRecipeSharingPlatform.Controllers;
+
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class cloudinaryController : ControllerBase

@@ -5,9 +5,12 @@ using FoodRecipeSharingPlatform.Dtos.IngredientDto.ResposeIngredient;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodRecipeSharingPlatform.Controllers;
+
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class ingredientController : ControllerBase
@@ -25,6 +28,7 @@ public class ingredientController : ControllerBase
         return Ok(Result<ResponseCommand>.CreatedSuccess(result));
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllIngredients(CancellationToken cancellationToken)
     {
@@ -46,6 +50,7 @@ public class ingredientController : ControllerBase
         return Ok(Result<ResponseCommand>.CreatedSuccess(ingredient));
     }
 
+    [AllowAnonymous]
     [HttpGet("search")]
     public async Task<IActionResult> FindIngredientsByName([FromQuery] string name, CancellationToken cancellationToken)
     {

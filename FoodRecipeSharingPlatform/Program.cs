@@ -25,6 +25,7 @@ using StackExchange.Redis;
 using Serilog;
 using Serilog.Sinks.Slack;
 using Serilog.Core;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -175,6 +176,7 @@ var JsonConfiguration = new ConfigurationBuilder()
 
     builder.Services
         .AddExceptionHandler<GlobalExceptionHander>()
+        .AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddleware>()
         .AddProblemDetails();
 }
 

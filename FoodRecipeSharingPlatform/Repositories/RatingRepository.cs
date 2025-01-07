@@ -1,12 +1,15 @@
 using AutoMapper;
+using FluentValidation;
 using FoodRecipeSharingPlatform.Data.Common;
 using FoodRecipeSharingPlatform.Dtos.RatingDto.CommandRating;
 using FoodRecipeSharingPlatform.Dtos.RatingDto.ResponseRating;
 using FoodRecipeSharingPlatform.Enitities;
+using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Security;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodRecipeSharingPlatform.Repositories;
@@ -17,14 +20,16 @@ public class RatingRepository : BaseRepository<Rating, Guid, CommandRating>, IRa
     private IJwtService _jwtService;
     private IUserServiceRepository _userServiceRepository;
     private readonly ILogger<RatingRepository> _logger;
+    private readonly UserManager<User> _userManager;
     public RatingRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory,
                                 IJwtService jwtService, IUserServiceRepository userServiceRepository,
-                                ILogger<RatingRepository> logger) : base(context, mapper)
+                                ILogger<RatingRepository> logger, UserManager<User> userManager) : base(context, mapper)
     {
         _ratingRepository = repositoryFactory.GetRepository<Rating, Guid, CommandRating>();
         _jwtService = jwtService;
         _userServiceRepository = userServiceRepository;
         _logger = logger;
+        _userManager = userManager;
     }
 
     public async Task<ResponseCommand> AddRating(Guid FoodId, CommandRating commandRating, CancellationToken cancellationToken)
@@ -46,11 +51,20 @@ public class RatingRepository : BaseRepository<Rating, Guid, CommandRating>, IRa
         }
     }
 
-    public Task<ResponseCommand> RemoveRating(Guid id, CancellationToken cancellationToken)
+    public async Task<ResponseCommand> RemoveRating(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            return _ratingRepository.DeleteByIdAsync(id, cancellationToken);
+            var token = _jwtService.GetCurrentToken();
+            var user = await _userServiceRepository.GetUserByToken(token!);
+            var role = await _userManager.GetRolesAsync(user!);
+            var rating = await _ratingRepository.GetByIdAsync(id, cancellationToken);
+            if (rating.UserId != user!.Id && !role.Contains("Admin"))
+            {
+                throw new ForbiddenException("You are not allowed to delete this rating");
+            }
+            var result = await _ratingRepository.DeleteAsync(rating, cancellationToken);
+            return result;
         }
         catch (Exception ex)
         {
