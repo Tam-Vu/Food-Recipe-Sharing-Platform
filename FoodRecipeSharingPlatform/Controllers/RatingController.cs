@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodRecipeSharingPlatform.Controllers;
+
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ratingController : ControllerBase
@@ -18,7 +20,6 @@ public class ratingController : ControllerBase
         _ratingRepository = ratingRepository;
     }
 
-    [Authorize]
     [HttpPost("{FoodId}")]
     public async Task<IActionResult> AddRating(Guid FoodId, [FromBody] CommandRating commandRating, CancellationToken cancellationToken)
     {
@@ -26,7 +27,6 @@ public class ratingController : ControllerBase
         return Ok(Result<ResponseCommand>.CreatedSuccess(result));
     }
 
-    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> RemoveRating(Guid id, CancellationToken cancellationToken)
     {
@@ -34,7 +34,6 @@ public class ratingController : ControllerBase
         return Ok(Result<ResponseCommand>.CreatedSuccess(rating));
     }
 
-    [Authorize]
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateRating(Guid id, [FromBody] CommandRating commandRating, CancellationToken cancellationToken)
     {
@@ -42,6 +41,7 @@ public class ratingController : ControllerBase
         return Ok(Result<ResponseCommand>.CommonSuccess(result));
     }
 
+    [AllowAnonymous]
     [HttpGet("food/{FoodId}")]
     public async Task<IActionResult> GetRatingsByFoodId(Guid FoodId, CancellationToken cancellationToken)
     {
@@ -49,12 +49,15 @@ public class ratingController : ControllerBase
         return Ok(Result<List<ResponseRating>>.CommonSuccess(result));
     }
 
+    [AllowAnonymous]
     [HttpGet("food/{FoodId}/rate")]
     public async Task<IActionResult> GetRatingsByFoodIdAndStar(Guid FoodId, [FromQuery] int Star, CancellationToken cancellationToken)
     {
         var result = await _ratingRepository.GetRatingsByFoodIdAndStar(FoodId, Star, cancellationToken);
         return Ok(Result<List<ResponseRating>>.CommonSuccess(result));
     }
+
+    [AllowAnonymous]
     [HttpGet("food/{FoodId}/list")]
     public async Task<IActionResult> GetRatingsByFoodIdOrderByStart(Guid FoodId, [FromQuery] string Order, CancellationToken cancellationToken)
     {

@@ -4,10 +4,12 @@ using FoodRecipeSharingPlatform.Dtos.CategoryDto.ResponseCategory;
 using FoodRecipeSharingPlatform.Enitities.Models;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodRecipeSharingPlatform.Controllers;
 
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/[Controller]")]
 public class categoryController : ControllerBase
@@ -39,6 +41,7 @@ public class categoryController : ControllerBase
         return Ok(Result<ResponseCommand>.CommonSuccess(response));
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetListCategories(CancellationToken cancellationToken)
     {
@@ -46,6 +49,7 @@ public class categoryController : ControllerBase
         return Ok(Result<List<ResponseCategory>>.CommonSuccess(response));
     }
 
+    [AllowAnonymous]
     [HttpGet("search")]
     public async Task<IActionResult> GetListCategoriesByName([FromQuery] string name, CancellationToken cancellationToken)
     {

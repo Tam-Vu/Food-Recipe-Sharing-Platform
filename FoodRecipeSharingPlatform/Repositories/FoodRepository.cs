@@ -5,11 +5,13 @@ using FoodRecipeSharingPlatform.Dtos.FoodDto.CommandFood.CommandFoodIngredient;
 using FoodRecipeSharingPlatform.Dtos.FoodDto.CommandFood.CommandStep;
 using FoodRecipeSharingPlatform.Dtos.FoodDto.ResponseFood.ResponseFood;
 using FoodRecipeSharingPlatform.Enitities;
+using FoodRecipeSharingPlatform.Enitities.Identity;
 using FoodRecipeSharingPlatform.Entities.Models;
 using FoodRecipeSharingPlatform.Exceptions;
 using FoodRecipeSharingPlatform.Interfaces;
 using FoodRecipeSharingPlatform.Interfaces.Builder;
 using FoodRecipeSharingPlatform.Interfaces.Security;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodRecipeSharingPlatform.Repositories;
@@ -24,10 +26,11 @@ public class FoodRepository : BaseRepository<Food, Guid, CommandFood>, IFoodRepo
     private readonly IBaseRepository<FoodIngredient, Guid, CommandFoodIngredients> _foodIngredientRepository;
     private readonly IJwtService _jwtService;
     private readonly IUserServiceRepository _userServiceRepository;
+    private readonly UserManager<User> _userManager;
 
     public FoodRepository(ApplicationDbContext context, IMapper mapper, IRepositoryFactory repositoryFactory,
                             IFoodBuilder foodBuilder, IIdentityService identityService, ILogger<FoodRepository> logger, IUnitOfWork unitOfWork,
-                            IJwtService jwtService, IUserServiceRepository userServiceRepository) : base(context, mapper)
+                            IJwtService jwtService, IUserServiceRepository userServiceRepository, UserManager<User> userManager) : base(context, mapper)
     {
         _foodRepository = repositoryFactory.GetRepository<Food, Guid, CommandFood>();
         _foodIngredientRepository = repositoryFactory.GetRepository<FoodIngredient, Guid, CommandFoodIngredients>();
@@ -37,6 +40,7 @@ public class FoodRepository : BaseRepository<Food, Guid, CommandFood>, IFoodRepo
         _unitOfWork = unitOfWork;
         _jwtService = jwtService;
         _userServiceRepository = userServiceRepository;
+        _userManager = userManager;
     }
 
     public async Task<ResponseCommand> CreateFoodAsync(CommandFood commandFood, CancellationToken cancellationToken)
@@ -69,11 +73,20 @@ public class FoodRepository : BaseRepository<Food, Guid, CommandFood>, IFoodRepo
         }
     }
 
-    public Task<ResponseCommand> DeleteFoodAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<ResponseCommand> DeleteFoodAsync(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            return _foodRepository.DeleteByIdAsync(id, cancellationToken);
+            var token = _jwtService.GetCurrentToken();
+            var user = await _userServiceRepository.GetUserByToken(token!);
+            var food = await _foodRepository.GetSingleAsync(c => c.Id == id, cancellationToken);
+            var role = await _userManager.GetRolesAsync(user!);
+            if (food.UserId != user!.Id && !role.Contains("Admin"))
+            {
+                throw new ForbiddenException("You are not allowed to delete this food");
+            }
+            var result = await _foodRepository.DeleteByIdAsync(id, cancellationToken);
+            return result;
         }
         catch (Exception e)
         {
