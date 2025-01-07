@@ -8,6 +8,6 @@ public class ResponseRatingMapping : Profile
     public ResponseRatingMapping()
     {
         CreateMap<Rating, ResponseRating>()
-            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName));
     }
 }

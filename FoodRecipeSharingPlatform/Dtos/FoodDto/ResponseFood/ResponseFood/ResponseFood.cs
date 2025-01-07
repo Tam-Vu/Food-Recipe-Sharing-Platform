@@ -12,7 +12,7 @@ public class ResponseFood
     public string? AverageStar { get; set; }
     public string Category { get; set; } = null!;
     public Guid UserId { get; set; }
-    public string UserName { get; set; } = null!;
+    public string FullName { get; set; } = null!;
     public List<ResponseFoodIngredients>? Ingredients { get; set; }
     public List<ResponseSteps>? Steps { get; set; }
     public ResponseFood()
