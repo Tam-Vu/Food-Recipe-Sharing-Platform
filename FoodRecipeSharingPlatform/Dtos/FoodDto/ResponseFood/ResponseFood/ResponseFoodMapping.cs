@@ -10,7 +10,7 @@ public class ResponseFoodMapping : Profile
         CreateMap<Food, ResponseFood>()
         .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
         .ForMember(dest => dest.Ingredients, opt => opt.MapFrom(src => src.FoodIngredients))
-        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
+        .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName));
 
         CreateMap<Food, ResponseListFood>();
     }
